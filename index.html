@@ -66,21 +66,21 @@
             display: inline-block;
         }
         #map-wrap { position: relative; }
-        #map-status, #map-leg-memo {
+        #map-leg-card {
             position: absolute;
+            top: 12px;
+            left: 12px;
             z-index: 400;
             pointer-events: none;
-            background: rgba(255,255,255,0.94);
+            background: rgba(255,255,255,0.95);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(226,232,240,0.95);
             border-radius: 14px;
             box-shadow: 0 8px 24px rgba(15,23,42,0.12);
-            max-width: min(46%, 220px);
+            max-width: min(72%, 280px);
+            padding: 10px 12px;
         }
-        #map-status { top: 12px; left: 12px; padding: 10px 12px; }
-        #map-leg-memo { top: 12px; right: 12px; padding: 10px 12px; text-align: right; }
-        #map-status .map-chip-label,
-        #map-leg-memo .map-chip-label {
+        #map-leg-card .map-chip-label {
             display: block;
             font-size: 10px;
             font-weight: 800;
@@ -103,20 +103,39 @@
             color: #004098;
             margin: 2px 0;
         }
+        #map-leg-card .map-leg-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 10px;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed #cbd5e1;
+        }
         #map-leg-dist, #map-leg-time {
-            display: block;
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: 800;
             color: #0f172a;
-            line-height: 1.4;
+            line-height: 1.35;
+            white-space: nowrap;
         }
-        #map-leg-memo.is-idle #map-leg-dist,
-        #map-leg-memo.is-idle #map-leg-time { color: #64748b; font-weight: 600; }
+        #map-leg-dist::before {
+            content: '거리 ';
+            color: #64748b;
+            font-weight: 700;
+        }
+        #map-leg-time::before {
+            content: '소요 ';
+            color: #64748b;
+            font-weight: 700;
+        }
+        #map-leg-card.is-idle #map-leg-dist,
+        #map-leg-card.is-idle #map-leg-time { color: #64748b; font-weight: 600; }
         .leaflet-bottom.leaflet-right { margin-bottom: 8px; margin-right: 8px; }
         @media (max-width: 768px) {
             #map { height: 440px; }
-            #map-status, #map-leg-memo { max-width: min(48%, 168px); padding: 8px 10px; border-radius: 12px; }
-            #map-status-from, #map-status-to, #map-leg-dist, #map-leg-time { font-size: 11px; }
+            #map-leg-card { max-width: min(78%, 220px); padding: 8px 10px; border-radius: 12px; }
+            #map-status-from, #map-status-to { font-size: 11px; }
+            #map-leg-dist, #map-leg-time { font-size: 11px; }
         }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -487,16 +506,15 @@
             <div class="max-w-5xl mx-auto border border-slate-200 rounded-2xl p-1 shadow-lg bg-white relative z-0">
                 <div id="map-wrap">
                     <div id="map"></div>
-                    <div id="map-status" aria-live="polite">
-                        <span class="map-chip-label"><i class="fa-solid fa-route text-indigo-500 mr-1"></i>이동 구간</span>
+                    <div id="map-leg-card" class="is-idle" aria-live="polite">
+                        <span class="map-chip-label"><i class="fa-solid fa-route text-indigo-500 mr-1"></i>이동 구간 · 메모</span>
                         <span id="map-status-from">전체 여정</span>
                         <span id="map-status-arrow">→</span>
                         <span id="map-status-to">도로 동선 재생</span>
-                    </div>
-                    <div id="map-leg-memo" class="is-idle" aria-live="polite">
-                        <span class="map-chip-label"><i class="fa-solid fa-note-sticky text-amber-500 mr-1"></i>구간 메모</span>
-                        <span id="map-leg-dist">거리 계산 중</span>
-                        <span id="map-leg-time">소요시간 안내</span>
+                        <div class="map-leg-meta">
+                            <span id="map-leg-dist">계산 중</span>
+                            <span id="map-leg-time">단체 기준</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1676,26 +1694,33 @@
             }
         };
         function isMobileView() { return window.matchMedia('(max-width: 768px)').matches; }
-        function setMapStatus(fromText, toText) {
+        function setMapLegCard(fromText, toText, distanceText, timeText, idle) {
+            const box = document.getElementById('map-leg-card');
             const fromEl = document.getElementById('map-status-from');
             const toEl = document.getElementById('map-status-to');
             const arrowEl = document.getElementById('map-status-arrow');
+            const distEl = document.getElementById('map-leg-dist');
+            const timeEl = document.getElementById('map-leg-time');
             if (fromEl) fromEl.textContent = fromText || '';
             if (toEl) toEl.textContent = toText || '';
             if (arrowEl) arrowEl.style.display = toText ? 'block' : 'none';
-        }
-        function setMapLegMemo(distanceText, timeText, idle) {
-            const box = document.getElementById('map-leg-memo');
-            const distEl = document.getElementById('map-leg-dist');
-            const timeEl = document.getElementById('map-leg-time');
             if (distEl) distEl.textContent = distanceText || '';
             if (timeEl) timeEl.textContent = timeText || '';
             if (box) box.classList.toggle('is-idle', !!idle);
         }
+        /* 단체버스 기준: OSRM(승용)보다 여유 있게 — 속도 보정 + 승하차 버퍼 + 5분 단위 올림 */
+        function groupTourDurationSeconds(meters, seconds) {
+            const km = Math.max(0, meters || 0) / 1000;
+            let buffered = Math.max(0, seconds || 0) * 1.45;
+            buffered += (10 + Math.floor(km / 40) * 5) * 60;
+            const mins = Math.max(15, Math.ceil(buffered / 60 / 5) * 5);
+            return mins * 60;
+        }
         function formatDriveMeta(meters, seconds) {
             const km = Math.max(0, meters || 0) / 1000;
             const kmText = km < 10 ? km.toFixed(1) : String(Math.round(km));
-            const mins = Math.max(1, Math.round((seconds || 0) / 60));
+            const groupSec = groupTourDurationSeconds(meters, seconds);
+            const mins = Math.round(groupSec / 60);
             let timeText;
             if (mins < 60) timeText = `약 ${mins}분`;
             else {
@@ -1703,13 +1728,13 @@
                 const m = mins % 60;
                 timeText = m ? `약 ${h}시간 ${m}분` : `약 ${h}시간`;
             }
-            return { distance: `약 ${kmText} km`, duration: timeText };
+            return { distance: `약 ${kmText} km`, duration: timeText, groupSeconds: groupSec };
         }
         function estimateDriveMeta(fromCoords, toCoords) {
             const a = L.latLng(fromCoords);
             const b = L.latLng(toCoords);
             const meters = a.distanceTo(b) * 1.35;
-            const seconds = (meters / 1000) / 55 * 3600;
+            const seconds = (meters / 1000) / 50 * 3600;
             return { meters, seconds };
         }
         function pinIcon(spot) {
@@ -1875,7 +1900,7 @@
             if (!currentMap || !bounds || !bounds.isValid()) return Promise.resolve();
             const mobile = isMobileView();
             const opts = {
-                paddingTopLeft: [mobile ? 10 : 14, mobile ? 108 : 96],
+                paddingTopLeft: [mobile ? 12 : 16, mobile ? 128 : 118],
                 paddingBottomRight: [mobile ? 10 : 14, mobile ? 56 : 64],
                 maxZoom: maxZoom || 11
             };
@@ -1894,8 +1919,7 @@
             const hint = mapHints[routeKey] || '';
             const hintEl = document.getElementById('map-hint');
             if (hintEl) hintEl.textContent = hint;
-            setMapStatus('도로 동선', '불러오는 중');
-            setMapLegMemo('거리 계산 중', '소요시간 안내', true);
+            setMapLegCard('도로 동선', '불러오는 중', '계산 중', '단체 기준', true);
             const legs = [];
             routeData.lines.forEach(lineDef => {
                 for (let i = 0; i < lineDef.pts.length - 1; i++) {
@@ -1933,18 +1957,17 @@
             activeBus = bus;
             mapLayers.push(bus);
             let totalMeters = 0;
-            let totalSeconds = 0;
+            let totalGroupSeconds = 0;
             for (let i = 0; i < legs.length; i++) {
                 if (seq !== mapDrawSeq) return;
                 const leg = legs[i];
                 const routeInfo = routeLegs[i];
                 const path = routeInfo.path;
                 totalMeters += routeInfo.distance || 0;
-                totalSeconds += routeInfo.duration || 0;
+                totalGroupSeconds += groupTourDurationSeconds(routeInfo.distance, routeInfo.duration);
                 applyVehicleHeading(bus, bearingDeg(spots[leg.from].coords, spots[leg.to].coords));
-                setMapStatus(spots[leg.from].title, spots[leg.to].title);
                 const meta = formatDriveMeta(routeInfo.distance, routeInfo.duration);
-                setMapLegMemo(meta.distance, meta.duration, false);
+                setMapLegCard(spots[leg.from].title, spots[leg.to].title, meta.distance, meta.duration, false);
                 const poly = L.polyline(path, {
                     color: leg.color, weight: 5, opacity: 0.95,
                     lineJoin: 'round', lineCap: 'round'
@@ -1971,9 +1994,17 @@
             }
             if (seq !== mapDrawSeq) return;
             const dayLabel = routeKey === 'all' ? '전체 여정' : routeKey.replace('day', '') + '일차 합계';
-            setMapStatus(dayLabel, '재생 완료');
-            const totalMeta = formatDriveMeta(totalMeters, totalSeconds);
-            setMapLegMemo(totalMeta.distance, totalMeta.duration + ' (합계)', false);
+            const km = totalMeters / 1000;
+            const kmText = km < 10 ? km.toFixed(1) : String(Math.round(km));
+            const totalMins = Math.max(15, Math.ceil(totalGroupSeconds / 60 / 5) * 5);
+            let totalTime;
+            if (totalMins < 60) totalTime = `약 ${totalMins}분`;
+            else {
+                const h = Math.floor(totalMins / 60);
+                const m = totalMins % 60;
+                totalTime = m ? `약 ${h}시간 ${m}분` : `약 ${h}시간`;
+            }
+            setMapLegCard(dayLabel, '재생 완료', `약 ${kmText} km`, `${totalTime} (합계)`, false);
             if (bus && currentMap.hasLayer(bus)) currentMap.removeLayer(bus);
             mapLayers = mapLayers.filter(layer => layer !== bus);
             if (activeBus === bus) activeBus = null;
