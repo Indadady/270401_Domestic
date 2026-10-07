@@ -65,7 +65,59 @@
             transform-origin: center center;
             display: inline-block;
         }
-        @media (max-width: 768px) { #map { height: 440px; } }
+        #map-wrap { position: relative; }
+        #map-status, #map-leg-memo {
+            position: absolute;
+            z-index: 400;
+            pointer-events: none;
+            background: rgba(255,255,255,0.94);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(226,232,240,0.95);
+            border-radius: 14px;
+            box-shadow: 0 8px 24px rgba(15,23,42,0.12);
+            max-width: min(46%, 220px);
+        }
+        #map-status { top: 12px; left: 12px; padding: 10px 12px; }
+        #map-leg-memo { top: 12px; right: 12px; padding: 10px 12px; text-align: right; }
+        #map-status .map-chip-label,
+        #map-leg-memo .map-chip-label {
+            display: block;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+        #map-status-from, #map-status-to {
+            display: block;
+            font-size: 12px;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.35;
+            word-break: keep-all;
+        }
+        #map-status-arrow {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: #004098;
+            margin: 2px 0;
+        }
+        #map-leg-dist, #map-leg-time {
+            display: block;
+            font-size: 12px;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.4;
+        }
+        #map-leg-memo.is-idle #map-leg-dist,
+        #map-leg-memo.is-idle #map-leg-time { color: #64748b; font-weight: 600; }
+        .leaflet-bottom.leaflet-right { margin-bottom: 8px; margin-right: 8px; }
+        @media (max-width: 768px) {
+            #map { height: 440px; }
+            #map-status, #map-leg-memo { max-width: min(48%, 168px); padding: 8px 10px; border-radius: 12px; }
+            #map-status-from, #map-status-to, #map-leg-dist, #map-leg-time { font-size: 11px; }
+        }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .animate-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
@@ -314,9 +366,19 @@
                 <button type="button" onclick="filterMap('day4')" id="btn-map-day4" class="map-btn px-4 py-2 rounded-full text-sm font-bold bg-white border border-slate-300 text-slate-600 shadow-sm transition-colors">4일차(부여·귀가)</button>
             </div>
             <div class="max-w-5xl mx-auto border border-slate-200 rounded-2xl p-1 shadow-lg bg-white relative z-0">
-                <div id="map"></div>
-                <div id="map-status" class="absolute top-4 left-4 z-[400] bg-white/90 backdrop-blur px-3 py-1.5 rounded-xl shadow font-bold text-xs text-slate-700 pointer-events-none">
-                    <i class="fa-solid fa-route text-indigo-500 mr-1"></i><span id="map-status-text">실제 도로 동선</span>
+                <div id="map-wrap">
+                    <div id="map"></div>
+                    <div id="map-status" aria-live="polite">
+                        <span class="map-chip-label"><i class="fa-solid fa-route text-indigo-500 mr-1"></i>이동 구간</span>
+                        <span id="map-status-from">전체 여정</span>
+                        <span id="map-status-arrow">→</span>
+                        <span id="map-status-to">도로 동선 재생</span>
+                    </div>
+                    <div id="map-leg-memo" class="is-idle" aria-live="polite">
+                        <span class="map-chip-label"><i class="fa-solid fa-note-sticky text-amber-500 mr-1"></i>구간 메모</span>
+                        <span id="map-leg-dist">거리 계산 중</span>
+                        <span id="map-leg-time">소요시간 안내</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1228,9 +1290,41 @@
             }
         };
         function isMobileView() { return window.matchMedia('(max-width: 768px)').matches; }
-        function setMapStatus(text) {
-            const el = document.getElementById('map-status-text');
-            if (el) el.textContent = text;
+        function setMapStatus(fromText, toText) {
+            const fromEl = document.getElementById('map-status-from');
+            const toEl = document.getElementById('map-status-to');
+            const arrowEl = document.getElementById('map-status-arrow');
+            if (fromEl) fromEl.textContent = fromText || '';
+            if (toEl) toEl.textContent = toText || '';
+            if (arrowEl) arrowEl.style.display = toText ? 'block' : 'none';
+        }
+        function setMapLegMemo(distanceText, timeText, idle) {
+            const box = document.getElementById('map-leg-memo');
+            const distEl = document.getElementById('map-leg-dist');
+            const timeEl = document.getElementById('map-leg-time');
+            if (distEl) distEl.textContent = distanceText || '';
+            if (timeEl) timeEl.textContent = timeText || '';
+            if (box) box.classList.toggle('is-idle', !!idle);
+        }
+        function formatDriveMeta(meters, seconds) {
+            const km = Math.max(0, meters || 0) / 1000;
+            const kmText = km < 10 ? km.toFixed(1) : String(Math.round(km));
+            const mins = Math.max(1, Math.round((seconds || 0) / 60));
+            let timeText;
+            if (mins < 60) timeText = `약 ${mins}분`;
+            else {
+                const h = Math.floor(mins / 60);
+                const m = mins % 60;
+                timeText = m ? `약 ${h}시간 ${m}분` : `약 ${h}시간`;
+            }
+            return { distance: `약 ${kmText} km`, duration: timeText };
+        }
+        function estimateDriveMeta(fromCoords, toCoords) {
+            const a = L.latLng(fromCoords);
+            const b = L.latLng(toCoords);
+            const meters = a.distanceTo(b) * 1.35;
+            const seconds = (meters / 1000) / 55 * 3600;
+            return { meters, seconds };
         }
         function pinIcon(spot) {
             return L.divIcon({
@@ -1290,17 +1384,26 @@
         async function roadPath(pts) {
             const key = pts.map(p => p.join(',')).join('|');
             if (osrmCache[key]) return osrmCache[key];
+            const fallbackMeta = estimateDriveMeta(pts[0], pts[pts.length - 1]);
             try {
                 const coords = pts.map(p => `${p[1]},${p[0]}`).join(';');
                 const res = await fetch(`https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson`);
                 const data = await res.json();
                 if (data.code === 'Ok' && data.routes && data.routes[0]) {
-                    const path = data.routes[0].geometry.coordinates.map(([lng, lat]) => [lat, lng]);
-                    osrmCache[key] = path;
-                    return path;
+                    const route = data.routes[0];
+                    const path = route.geometry.coordinates.map(([lng, lat]) => [lat, lng]);
+                    const result = {
+                        path,
+                        distance: route.distance || fallbackMeta.meters,
+                        duration: route.duration || fallbackMeta.seconds
+                    };
+                    osrmCache[key] = result;
+                    return result;
                 }
             } catch (e) { /* straight fallback */ }
-            return pts;
+            const result = { path: pts, distance: fallbackMeta.meters, duration: fallbackMeta.seconds };
+            osrmCache[key] = result;
+            return result;
         }
         async function mapPool(items, limit, fn) {
             const out = new Array(items.length);
@@ -1384,7 +1487,12 @@
         }
         function fitMapTo(bounds, maxZoom, animate) {
             if (!currentMap || !bounds || !bounds.isValid()) return Promise.resolve();
-            const opts = { padding: [48, 48], maxZoom: maxZoom || 11 };
+            const mobile = isMobileView();
+            const opts = {
+                paddingTopLeft: [mobile ? 10 : 14, mobile ? 108 : 96],
+                paddingBottomRight: [mobile ? 10 : 14, mobile ? 56 : 64],
+                maxZoom: maxZoom || 11
+            };
             if (animate && typeof currentMap.flyToBounds === 'function') {
                 currentMap.flyToBounds(bounds, { ...opts, duration: 1.15 });
                 return new Promise(r => setTimeout(r, 1250));
@@ -1400,7 +1508,8 @@
             const hint = mapHints[routeKey] || '';
             const hintEl = document.getElementById('map-hint');
             if (hintEl) hintEl.textContent = hint;
-            setMapStatus('실제 도로 동선을 불러오는 중...');
+            setMapStatus('도로 동선', '불러오는 중');
+            setMapLegMemo('거리 계산 중', '소요시간 안내', true);
             const legs = [];
             routeData.lines.forEach(lineDef => {
                 for (let i = 0; i < lineDef.pts.length - 1; i++) {
@@ -1411,10 +1520,11 @@
             const startZoom = routeData.startZoom || routeData.maxZoom || 7;
             await fitMapTo(boundsForKeys(startKeys), startZoom, false);
             setTimeout(() => currentMap.invalidateSize(), 120);
-            const paths = await mapPool(legs, 3, leg => roadPath([spots[leg.from].coords, spots[leg.to].coords]));
+            const routeLegs = await mapPool(legs, 3, leg => roadPath([spots[leg.from].coords, spots[leg.to].coords]));
             if (seq !== mapDrawSeq) return;
             await new Promise(r => setTimeout(r, 200));
             if (seq !== mapDrawSeq) return;
+            const paths = routeLegs.map(r => r.path);
             const ghost = L.polyline(paths.flat(), { color: '#94a3b8', weight: 4, opacity: 0.22, lineJoin: 'round', lineCap: 'round' }).addTo(currentMap);
             mapLayers.push(ghost);
             const placed = new Set();
@@ -1436,12 +1546,19 @@
             bus._aborted = false;
             activeBus = bus;
             mapLayers.push(bus);
+            let totalMeters = 0;
+            let totalSeconds = 0;
             for (let i = 0; i < legs.length; i++) {
                 if (seq !== mapDrawSeq) return;
                 const leg = legs[i];
-                const path = paths[i];
+                const routeInfo = routeLegs[i];
+                const path = routeInfo.path;
+                totalMeters += routeInfo.distance || 0;
+                totalSeconds += routeInfo.duration || 0;
                 applyVehicleHeading(bus, bearingDeg(spots[leg.from].coords, spots[leg.to].coords));
-                setMapStatus(`${spots[leg.from].title} → ${spots[leg.to].title}`);
+                setMapStatus(spots[leg.from].title, spots[leg.to].title);
+                const meta = formatDriveMeta(routeInfo.distance, routeInfo.duration);
+                setMapLegMemo(meta.distance, meta.duration, false);
                 const poly = L.polyline(path, {
                     color: leg.color, weight: 5, opacity: 0.95,
                     lineJoin: 'round', lineCap: 'round'
@@ -1467,7 +1584,10 @@
                 await fitMapTo(boundsForKeys(routeData.endKeys), routeData.endZoom || routeData.maxZoom, true);
             }
             if (seq !== mapDrawSeq) return;
-            setMapStatus(hint);
+            const dayLabel = routeKey === 'all' ? '전체 여정' : routeKey.replace('day', '') + '일차 합계';
+            setMapStatus(dayLabel, '재생 완료');
+            const totalMeta = formatDriveMeta(totalMeters, totalSeconds);
+            setMapLegMemo(totalMeta.distance, totalMeta.duration + ' (합계)', false);
             if (bus && currentMap.hasLayer(bus)) currentMap.removeLayer(bus);
             mapLayers = mapLayers.filter(layer => layer !== bus);
             if (activeBus === bus) activeBus = null;
@@ -1487,7 +1607,8 @@
         function initMap(initialKey) {
             if (mapInited || !window.L) return;
             mapInited = true;
-            currentMap = L.map('map', { scrollWheelZoom: false });
+            currentMap = L.map('map', { scrollWheelZoom: false, zoomControl: false });
+            L.control.zoom({ position: 'bottomright' }).addTo(currentMap);
             L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
                 maxZoom: 19, attribution: 'Tiles &copy; Esri'
             }).addTo(currentMap);
