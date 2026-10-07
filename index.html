@@ -1,1057 +1,114 @@
 <!DOCTYPE html>
 <html lang="ko" class="scroll-smooth">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JLH9GD9SVR"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-JLH9GD9SVR');
-    </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>도계누나들 강원·서해안 3박 4일 - 스마트 가이드</title>
-    <meta name="description" content="도계누나들 강원·서해안 3박 4일 관광 일정 안내 · 7명 · 전용버스">
-    <meta property="og:title" content="도계누나들 강원·서해안 가이드북">
-    <meta property="og:description" content="2027. 4. 1~4 · 전용버스 · 3박 4일 일정 안내">
-    <meta property="og:image" content="https://indadady.github.io/270401_Domestic/assets/images/og-thumb.jpg">
-    <meta property="og:image:width" content="1920">
-    <meta property="og:image:height" content="1272">
-    <meta property="og:image:alt" content="강원·서해안 여행 전경">
-    <meta property="og:type" content="website">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Jua&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-    <style>
-        :root { --tm: #004098; --tm-dark: #002d6b; }
-        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8fafc; color: #1e293b; }
-        .font-title { font-family: 'Jua', sans-serif; }
-        .hero-bg {
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('assets/images/hero.jpg');
-            background-size: cover; background-position: center; background-attachment: fixed;
-        }
-        @media (max-width: 768px){ .hero-bg { background-attachment: scroll; } }
-        #map { height: 500px; width: 100%; border-radius: 1rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); z-index: 10; }
-        .leaflet-maplibre-gl { z-index: 0 !important; }
-        .custom-icon { background: transparent; border: none; }
-        .map-pin-wrap { display: flex; flex-direction: column; align-items: center; }
-        .map-pin-dot {
-            width: 32px; height: 32px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 15px; color: #fff;
-            border: 2px solid rgba(255,255,255,0.95);
-            box-shadow: 0 8px 16px rgba(15,23,42,0.18);
-        }
-        .map-pin-label {
-            margin-top: 3px;
-            background: rgba(255,255,255,0.96);
-            color: #0f172a;
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: -0.04em;
-            line-height: 1.2;
-            padding: 2px 6px;
-            border-radius: 6px;
-            white-space: nowrap;
-            box-shadow: 0 2px 8px rgba(15,23,42,0.12);
-        }
-        .map-bus {
-            font-size: 22px;
-            line-height: 1;
-            filter: drop-shadow(0 4px 8px rgba(15,23,42,0.35));
-            transform-origin: center center;
-            display: inline-block;
-        }
-        #map-wrap { position: relative; }
-        #map-leg-card {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            z-index: 400;
-            pointer-events: none;
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(226,232,240,0.95);
-            border-radius: 14px;
-            box-shadow: 0 8px 24px rgba(15,23,42,0.12);
-            max-width: min(72%, 280px);
-            padding: 10px 12px;
-        }
-        #map-leg-card .map-chip-label {
-            display: block;
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 0.04em;
-            color: #64748b;
-            margin-bottom: 4px;
-        }
-        #map-status-from, #map-status-to {
-            display: block;
-            font-size: 12px;
-            font-weight: 800;
-            color: #0f172a;
-            line-height: 1.35;
-            word-break: keep-all;
-        }
-        #map-status-arrow {
-            display: block;
-            font-size: 11px;
-            font-weight: 700;
-            color: #004098;
-            margin: 2px 0;
-        }
-        #map-leg-card .map-leg-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px 10px;
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px dashed #cbd5e1;
-        }
-        #map-leg-dist, #map-leg-time {
-            font-size: 11.5px;
-            font-weight: 800;
-            color: #0f172a;
-            line-height: 1.35;
-            white-space: nowrap;
-        }
-        #map-leg-dist::before {
-            content: '거리 ';
-            color: #64748b;
-            font-weight: 700;
-        }
-        #map-leg-time::before {
-            content: '소요 ';
-            color: #64748b;
-            font-weight: 700;
-        }
-        #map-leg-card.is-idle #map-leg-dist,
-        #map-leg-card.is-idle #map-leg-time { color: #64748b; font-weight: 600; }
-        .leaflet-bottom.leaflet-right { margin-bottom: 8px; margin-right: 8px; }
-        @media (max-width: 768px) {
-            #map { height: 440px; }
-            #map-leg-card { max-width: min(78%, 220px); padding: 8px 10px; border-radius: 12px; }
-            #map-status-from, #map-status-to { font-size: 11px; }
-            #map-leg-dist, #map-leg-time { font-size: 11px; }
-        }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .animate-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        section { scroll-margin-top: 80px; }
-        body.event-day section { scroll-margin-top: 148px; }
-        .schedule-media { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.25rem; }
-        @media (min-width: 768px) {
-            .schedule-media { flex-direction: row; align-items: flex-start; gap: 1rem; }
-            .schedule-media .schedule-desc { flex: 1; min-width: 0; }
-        }
-        .schedule-thumb {
-            display: block;
-            width: 100%;
-            max-width: 10.5rem;
-            aspect-ratio: 4 / 3;
-            object-fit: cover;
-            border-radius: 0.75rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
-            flex-shrink: 0;
-        }
-        @media (min-width: 768px) { .schedule-thumb { max-width: 11.5rem; } }
-        .weather-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.375rem; }
-        @media (min-width: 640px) { .weather-grid { gap: 0.75rem; } }
-        .weather-card { min-width: 0; word-break: keep-all; }
-        .esg-stat-label { line-height: 1.25; word-break: keep-all; }
-        /* 화면용 제안서 미리보기 */
-        #proposal .prop-preview {
-            background: #fff;
-            border: 1px solid #e2e8f0;
-            border-radius: 1.25rem;
-            box-shadow: 0 10px 30px rgba(15,23,42,0.06);
-            overflow: hidden;
-        }
-        #proposal .prop-hero {
-            background: linear-gradient(135deg, #004098 0%, #002d6b 55%, #0f172a 100%);
-            color: #fff;
-            padding: 1.75rem 1.5rem;
-        }
-        #proposal .prop-day {
-            border: 1px solid #e2e8f0;
-            border-radius: 1rem;
-            padding: 1rem 1.1rem;
-            background: #f8fafc;
-        }
-        #proposal .prop-day h4 {
-            color: #004098;
-            font-weight: 800;
-            font-size: 1.05rem;
-            margin-bottom: 0.4rem;
-        }
-
-        @media screen {
-            #print-area,
-            #proposal-print-area { display: none !important; }
-        }
-        @media print {
-            @page { size: A4 portrait; margin: 12mm 10mm; }
-            body { background-color: #ffffff !important; font-size: 10pt; color: #1e293b !important; }
-            a[href]:after { content: none !important; }
-            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .print-hidden, .print\:hidden { display: none !important; }
-            #print-area,
-            #proposal-print-area { display: none !important; width: 100%; color: #1e293b; font-family: 'Noto Sans KR', sans-serif; }
-            body.print-mode-itinerary #print-area,
-            body:not(.print-mode-proposal):not(.print-mode-itinerary) #print-area { display: block !important; }
-            /* 전체자료: 표지(제안) 1장 + 기존 일정표·준비물(동일 원본) */
-            body.print-mode-proposal #proposal-print-area { display: block !important; }
-            body.print-mode-proposal #print-area {
-                display: block !important;
-                page-break-before: always;
-                break-before: page;
-            }
-            .print-page-container { width: 100%; margin: 0; padding: 0; }
-            .print-header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #004098; padding-bottom: 8px; margin-bottom: 15px; }
-            .print-header .logo img { height: 32px; object-fit: contain; }
-            .print-header .doc-info { text-align: right; font-size: 11px; color: #475569; }
-            .print-title-section { text-align: center; margin-bottom: 15px; }
-            .print-title-section h1 { font-size: 20px; font-weight: 700; color: #0f172a; letter-spacing: -0.5px; margin: 0; }
-            .print-overview-slim {
-                display: flex; justify-content: space-between; gap: 8px;
-                background-color: #f8fafc; border: 1px solid #94a3b8; border-radius: 6px;
-                padding: 8px 14px; margin-bottom: 15px; font-size: 12.5px; word-break: keep-all;
-            }
-            .print-overview-item { display: flex; gap: 8px; align-items: flex-start; min-width: 0; }
-            .print-overview-slim .label { font-weight: 700; color: #004098; white-space: nowrap; flex-shrink: 0; }
-            .print-overview-slim .value { line-height: 1.45; }
-            .print-nowrap { white-space: nowrap; }
-            .print-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 12px; table-layout: fixed; border: 2px solid #1e293b; }
-            .print-table th, .print-table td { border: 1px solid #1e293b; padding: 8px 10px; vertical-align: top; page-break-inside: avoid; word-break: keep-all; }
-            .print-table th { background-color: #f8fafc !important; color: #1e293b; font-weight: 700; text-align: center; font-size: 12.5px; border-bottom: 2px solid #1e293b; }
-            .print-table tr { page-break-inside: avoid; }
-            .print-col-date { width: 14%; text-align: center; font-weight: 700; vertical-align: middle; background-color: #f8fafc; }
-            .print-col-desc { width: 70%; }
-            .print-col-meal { width: 16%; text-align: center; vertical-align: middle; }
-            .print-day-divider td { border-top: 2px solid #1e293b !important; }
-            .print-time-flow { margin-bottom: 4px; font-weight: 500; font-size: 12px; }
-            .print-time-tag { display: inline-block; color: #004098; font-weight: 700; margin-right: 5px; }
-            .print-highlight { font-weight: 700; color: #0f172a; }
-            .print-desc-list { list-style: none; margin: 4px 0 8px 0; padding-left: 5px; font-size: 12px; }
-            .print-desc-list li { position: relative; padding-left: 12px; margin-bottom: 3px; line-height: 1.45; }
-            .print-desc-list li::before { content: '■'; font-size: 8px; position: absolute; left: 0; top: 3px; color: #004098; }
-            .print-hotel-divider { border: 0; border-top: 1px dashed #94a3b8; margin: 8px 0 6px 0; }
-            .print-hotel-info { font-size: 12px; color: #0f172a; font-weight: 700; }
-            .print-meal-wrapper { display: flex; flex-direction: column; gap: 8px; justify-content: center; height: 100%; text-align: left; padding-left: 2px; }
-            .print-meal-simple { display: flex; align-items: flex-start; line-height: 1.35; font-size: 12px; }
-            .print-meal-simple strong { color: #004098; margin-right: 4px; width: 18px; flex-shrink: 0; }
-            .print-meal-menu { display: flex; flex-direction: column; word-break: keep-all; }
-            .print-remarks { font-size: 11px; color: #475569; text-align: right; font-weight: 500; margin-bottom: 10px; }
-            .print-contacts { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 18px; padding: 8px 10px; background: #f8fafc !important; border: 1px solid #cbd5e1 !important; border-radius: 4px; font-size: 9.5px; margin-bottom: 8px; }
-            .print-contacts .pc-role { font-weight: 700; color: #004098; margin-right: 3px; }
-            .print-footer-box { margin-top: 10px; padding-top: 10px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: flex-end; }
-            .print-brand-link { font-size: 11px; color: #6c757d; }
-            .print-manager-info { text-align: right; border-left: 3px solid #004098; padding-left: 10px; }
-            .print-manager-info .names { color: #0f172a; font-weight: 700; font-size: 12.5px; }
-            .print-page-2 { page-break-before: always; break-before: page; }
-            .print-checklist { border: 1.5px solid #1e293b; border-radius: 6px; padding: 12px 14px; background: #fff !important; margin: 12px 0; page-break-inside: avoid; }
-            .print-checklist h2 { font-size: 14px; font-weight: 800; color: #004098; margin: 0 0 10px 0; }
-            .print-checklist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; font-size: 12px; font-weight: 600; }
-            .print-check-item { display: flex; align-items: flex-start; gap: 8px; line-height: 1.4; }
-            .print-check-box { width: 13px; height: 13px; border: 1.5px solid #004098; border-radius: 2px; flex-shrink: 0; margin-top: 2px; }
-            .print-note-list { font-size: 11.5px; color: #475569; line-height: 1.55; margin: 0 0 12px 0; padding-left: 18px; }
-            .print-qr-box { display: flex; align-items: center; gap: 16px; padding: 14px 16px; border: 1.5px solid #1e293b; border-radius: 6px; background: #f8fafc !important; margin-bottom: 12px; page-break-inside: avoid; }
-            .print-qr-box img { width: 118px; height: 118px; border: 1px solid #1e293b; background: #fff; flex-shrink: 0; }
-            .print-qr-box .qr-copy { font-size: 12.5px; line-height: 1.5; font-weight: 600; }
-            .print-qr-box .qr-copy strong { color: #004098; font-size: 14px; display: block; margin-bottom: 4px; }
-            .print-qr-box .qr-url { color: #475569; font-size: 11px; word-break: break-all; font-weight: 500; }
-
-            /* 디지털 제안서 인쇄 */
-            .prop-sheet { width: 100%; }
-            .prop-sheet + .prop-sheet { page-break-before: always; break-before: page; }
-            .prop-head {
-                display: flex; justify-content: space-between; align-items: flex-end;
-                border-bottom: 3px solid #004098; padding-bottom: 10px; margin-bottom: 16px;
-            }
-            .prop-head img { height: 34px; object-fit: contain; }
-            .prop-head .doc { text-align: right; font-size: 11px; color: #475569; font-weight: 600; }
-            .prop-cover-badge {
-                display: inline-block; background: #004098; color: #fff; font-size: 12px; font-weight: 800;
-                padding: 4px 12px; border-radius: 999px; margin-bottom: 10px;
-            }
-            .prop-cover-title {
-                font-size: 26px; font-weight: 900; color: #0f172a; letter-spacing: -0.04em;
-                line-height: 1.3; margin: 0 0 8px 0;
-            }
-            .prop-cover-sub { font-size: 14px; color: #334155; font-weight: 600; margin-bottom: 16px; line-height: 1.5; }
-            .prop-meta {
-                display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
-                margin-bottom: 16px;
-            }
-            .prop-meta div {
-                border: 1px solid #94a3b8; border-radius: 8px; padding: 10px 12px; background: #f8fafc !important;
-            }
-            .prop-meta .k { display: block; font-size: 11px; font-weight: 800; color: #004098; margin-bottom: 2px; }
-            .prop-meta .v { font-size: 13.5px; font-weight: 700; color: #0f172a; word-break: keep-all; }
-            .prop-lead {
-                font-size: 13.5px; line-height: 1.65; color: #1e293b; font-weight: 500;
-                border-left: 4px solid #004098; padding: 8px 0 8px 14px; margin-bottom: 16px; background: #f8fafc !important;
-            }
-            .prop-h2 {
-                font-size: 15px; font-weight: 900; color: #004098; margin: 0 0 10px 0;
-                padding-bottom: 6px; border-bottom: 1px solid #cbd5e1;
-            }
-            .prop-hl-grid {
-                display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;
-            }
-            .prop-hl {
-                border: 1px solid #cbd5e1; border-radius: 10px; overflow: hidden; page-break-inside: avoid;
-                display: flex; gap: 0; background: #fff !important;
-            }
-            .prop-hl img { width: 88px; height: 78px; object-fit: cover; flex-shrink: 0; }
-            .prop-hl .body { padding: 8px 10px; }
-            .prop-hl .body strong { display: block; font-size: 13px; color: #0f172a; margin-bottom: 3px; }
-            .prop-hl .body span { font-size: 11.5px; color: #475569; line-height: 1.45; font-weight: 500; }
-            .prop-day-block {
-                border: 1.5px solid #1e293b; border-radius: 10px; padding: 12px 14px;
-                margin-bottom: 10px; page-break-inside: avoid; background: #fff !important;
-            }
-            .prop-day-block .day-top {
-                display: flex; justify-content: space-between; align-items: baseline;
-                margin-bottom: 6px; gap: 8px;
-            }
-            .prop-day-block .day-top strong { font-size: 15px; color: #004098; font-weight: 900; }
-            .prop-day-block .day-top em { font-style: normal; font-size: 12px; color: #64748b; font-weight: 700; }
-            .prop-day-block ul { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.55; color: #1e293b; }
-            .prop-day-block li { margin-bottom: 2px; }
-            .prop-day-block .stay { margin-top: 8px; font-size: 12.5px; font-weight: 800; color: #0f172a; }
-            .prop-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-            .prop-info-card {
-                border: 1px solid #94a3b8; border-radius: 10px; padding: 12px 14px;
-                background: #f8fafc !important; page-break-inside: avoid;
-            }
-            .prop-info-card h3 { font-size: 13px; font-weight: 900; color: #004098; margin: 0 0 6px 0; }
-            .prop-info-card p, .prop-info-card li { font-size: 12.5px; line-height: 1.5; color: #1e293b; font-weight: 500; }
-            .prop-info-card ul { margin: 0; padding-left: 16px; }
-            .prop-contact-row {
-                display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0;
-            }
-            .prop-contact-card {
-                border: 2px solid #004098; border-radius: 10px; padding: 12px 14px;
-                background: #fff !important; page-break-inside: avoid;
-            }
-            .prop-contact-card .role { font-size: 11px; font-weight: 800; color: #004098; }
-            .prop-contact-card .name { font-size: 16px; font-weight: 900; color: #0f172a; margin: 2px 0; }
-            .prop-contact-card .tel { font-size: 15px; font-weight: 800; color: #1e293b; }
-            .prop-foot {
-                margin-top: 14px; padding-top: 10px; border-top: 1px solid #e2e8f0;
-                display: flex; justify-content: space-between; align-items: flex-end; font-size: 11px; color: #64748b;
-            }
-            .prop-foot .mgr { text-align: right; border-left: 3px solid #004098; padding-left: 10px; color: #0f172a; font-weight: 800; font-size: 12.5px; }
-        }
-    </style>
-</head>
-<body class="antialiased pb-20 md:pb-0 print:pb-0 print:bg-white">
-    <div class="print:hidden">
-    <header class="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50">
-        <nav class="container mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-3 shrink-0">
-                <a href="http://tourmaker.kr" target="_blank" rel="noopener">
-                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgHfgIX70O5k6Anuo0UgALIdaG9jSga9auHu3uyz0uEirylGPAJnjN_qQbvEGMUvPqUQf_g9FMNUHRxlDcUBf4vZ3Mpy4TnA9WxbmzWYK11gt2zuy_Irl4wctNFjcjLyPo0GPXV792o_J7L9guRMuDfeC1gy7USwywjYbECZgzcsHybuGRRAXAnO1eNmP8/s320/logo.png" alt="Tourmaker" class="h-8">
-                </a>
-                <span id="d-day-badge" class="hidden bg-indigo-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold animate-pulse"></span>
-            </div>
-            <div class="flex-1 overflow-x-auto no-scrollbar ml-4 md:ml-8">
-                <div class="flex items-center space-x-1 md:space-x-5 whitespace-nowrap pr-4">
-                    <a href="#home" class="px-3 py-2 text-sm font-bold text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded-lg">홈</a>
-                    <a href="#highlights" class="px-3 py-2 text-sm font-bold text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 rounded-lg"><i class="fa-solid fa-star mr-1 text-yellow-400"></i>포인트</a>
-                    <a href="#flight" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded-lg">이동안내</a>
-                    <a href="#map-section" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded-lg">여행동선</a>
-                    <a href="#schedule" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded-lg">세부일정</a>
-                    <a href="#hotel" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded-lg">숙소</a>
-                    <a href="#check" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded-lg">준비물</a>
-                    <a href="#contact" class="px-3 py-2 text-sm font-bold text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg">비상연락</a>
-                    <a href="#weather-esg" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded-lg">날씨&ESG</a>
-                    <a href="#proposal" class="px-3 py-2 text-sm font-bold text-emerald-700 hover:text-emerald-900 hover:bg-emerald-50 rounded-lg">전체자료</a>
-                </div>
-            </div>
-            <div class="flex items-center gap-1 shrink-0 ml-1">
-                <button type="button" onclick="shareLink()" class="p-2 text-slate-500 hover:text-indigo-600" aria-label="공유"><i class="fa-solid fa-share-nodes text-xl"></i></button>
-            </div>
-        </nav>
-    </header>
-
-    <div id="event-day-bar" class="hidden sticky top-16 z-40 bg-white/95 backdrop-blur-md border-b border-indigo-100 shadow-sm">
-        <div class="container mx-auto px-4 py-2.5">
-            <div class="grid grid-cols-2 gap-2 max-w-lg mx-auto">
-                <button type="button" onclick="goToTodaySchedule()" class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl border-2 border-indigo-600 bg-indigo-600 text-white font-bold text-sm shadow-sm active:scale-95 transition">
-                    <i class="fa-solid fa-calendar-day"></i> 오늘의 일정
-                </button>
-                <button type="button" onclick="goToTodayRoute()" class="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl border-2 border-slate-300 bg-white text-slate-700 font-bold text-sm shadow-sm active:scale-95 transition">
-                    <i class="fa-solid fa-route"></i> 당일 동선
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <section id="home" class="hero-bg min-h-[60vh] flex items-center justify-center text-center px-4">
-        <div class="animate-fade-in-up text-white">
-            <span class="bg-indigo-600/90 px-6 py-2 rounded-full text-lg md:text-xl font-bold mb-6 inline-block border border-white/20 shadow-lg font-title tracking-wide">도계누나들</span>
-            <h1 class="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg font-title">강원에서 서해까지<br><span class="text-yellow-400 font-bold">3박 4일</span></h1>
-            <p id="hero-date" class="text-xl md:text-2xl text-white font-bold tracking-wide mb-2">2027. 4. 1(목) ~ 4. 4(일)</p>
-            <p id="hero-desc" class="text-sm md:text-base text-slate-200 font-medium tracking-wide">7명 · 전용버스 · 춘천·철원·인천·안면도·부여</p>
-        </div>
-    </section>
-
-    <section id="highlights" class="py-12 bg-white -mt-8 rounded-t-3xl relative z-10 shadow-[0_-5px_20px_rgba(0,0,0,0.1)]">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-10">
-                <span class="text-indigo-500 font-black tracking-widest text-xs uppercase">Special Points</span>
-                <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mt-2 font-title">이번 여행의<br class="md:hidden"/> 4가지 핵심 포인트</h2>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 shadow-sm">
-                    <div class="w-14 h-14 bg-amber-100 rounded-2xl flex items-center justify-center mb-4 text-3xl">🚡</div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-2">삼악산·남이섬</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed mb-4"><span class="text-amber-700 font-bold">삼악산 케이블카</span>로 춘천 풍경을 보고, <span class="text-amber-700 font-bold">남이섬</span>에서 달갈비로 중식을 합니다.</p>
-                    <span class="inline-block bg-amber-600 text-white text-xs px-2 py-1 rounded font-bold">춘천 · 남이섬</span>
-                </div>
-                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 shadow-sm">
-                    <div class="w-14 h-14 bg-sky-100 rounded-2xl flex items-center justify-center mb-4 text-3xl">🪨</div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-2">철원 고석정·안보</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed mb-4"><span class="text-sky-600 font-bold">주상절리·고석정</span>과 <span class="text-sky-600 font-bold">안보관광</span>으로 철원의 자연과 역사를 함께 봅니다.</p>
-                    <span class="inline-block bg-sky-600 text-white text-xs px-2 py-1 rounded font-bold">철원 · 안보</span>
-                </div>
-                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 shadow-sm">
-                    <div class="w-14 h-14 bg-indigo-100 rounded-2xl flex items-center justify-center mb-4 text-3xl">🚢</div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-2">인천 월미도</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed mb-4"><span class="text-indigo-600 font-bold">월미바다열차</span>와 <span class="text-indigo-600 font-bold">월미도 유람선</span>으로 인천 앞바다를 즐깁니다.</p>
-                    <span class="inline-block bg-indigo-600 text-white text-xs px-2 py-1 rounded font-bold">바다열차 · 유람선</span>
-                </div>
-                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 shadow-sm">
-                    <div class="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center mb-4 text-3xl">🌸</div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-2">안면도·부여 백제</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed mb-4"><span class="text-emerald-700 font-bold">안면도 꽃박람회</span>와 <span class="text-emerald-700 font-bold">백마강·백제문화단지</span>로 서해와 백제를 잇습니다.</p>
-                    <span class="inline-block bg-emerald-600 text-white text-xs px-2 py-1 rounded font-bold">꽃 · 백제</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="flight" class="py-12 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="max-w-5xl mx-auto mb-8">
-                <div class="bg-white rounded-2xl border border-indigo-100 shadow-lg overflow-hidden">
-                    <div class="bg-indigo-50 px-6 py-4 border-b border-indigo-100 flex flex-wrap justify-between items-center gap-2">
-                        <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2 font-title">
-                            <i class="fa-solid fa-bus text-indigo-500"></i> 차량 이동 안내
-                        </h3>
-                        <span class="bg-indigo-600 text-white text-xs px-3 py-1 rounded-full font-bold shadow-sm">전용버스 · 3박 4일</span>
-                    </div>
-                    <div class="p-6 md:p-8">
-                        <div class="bg-indigo-50 rounded-xl p-4 mb-6 border border-indigo-100">
-                            <h4 class="font-bold text-indigo-800 mb-2 flex items-center gap-2"><i class="fa-solid fa-location-dot"></i> 07:00 도계 출발</h4>
-                            <p class="text-sm text-indigo-900 leading-relaxed font-medium">집결지는 도계입니다. 강원(춘천·철원)에서 인천 월미도, 서해안(안면도·대천), 부여를 거쳐 제천 석식 후 도계에서 해산합니다.</p>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6 text-sm">
-                            <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
-                                <p class="font-bold text-slate-800 mb-1">가는 길 · 4/1(목)</p>
-                                <p class="text-slate-600">도계 → 삼악산 → 남이섬 → 고석정 → 철원 숙소</p>
-                            </div>
-                            <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
-                                <p class="font-bold text-slate-800 mb-1">오는 길 · 4/4(일)</p>
-                                <p class="text-slate-600">대천 → 백마강 → 백제문화단지 → 제천 석식 → 도계 해산</p>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
-                            <div class="bg-white rounded-xl p-4 border border-indigo-100 shadow-sm">
-                                <div class="mb-2"><i class="fa-solid fa-bus text-2xl text-indigo-500"></i></div>
-                                <h4 class="font-bold text-slate-800 text-sm">전용 차량</h4>
-                                <p class="text-[11px] text-slate-500 mt-1">7명 · 전 일정 같은 버스로 이동합니다.</p>
-                            </div>
-                            <div class="bg-white rounded-xl p-4 border border-indigo-100 shadow-sm">
-                                <div class="mb-2"><i class="fa-solid fa-seatbelt text-2xl text-indigo-500"></i></div>
-                                <h4 class="font-bold text-slate-800 text-sm">안전벨트</h4>
-                                <p class="text-[11px] text-slate-500 mt-1">이동 중에는 좌석에 앉아 안전벨트를 착용해 주세요.</p>
-                            </div>
-                            <div class="bg-white rounded-xl p-4 border border-indigo-100 shadow-sm">
-                                <div class="mb-2"><i class="fa-solid fa-clock text-2xl text-indigo-500"></i></div>
-                                <h4 class="font-bold text-slate-800 text-sm">집결 시간</h4>
-                                <p class="text-[11px] text-slate-500 mt-1">관광지에서 버스 집결 시간을 함께 지켜 주세요.</p>
-                            </div>
-                            <div class="bg-white rounded-xl p-4 border border-indigo-100 shadow-sm">
-                                <div class="mb-2"><i class="fa-solid fa-bed text-2xl text-indigo-500"></i></div>
-                                <h4 class="font-bold text-slate-800 text-sm">숙소 매너</h4>
-                                <p class="text-[11px] text-slate-500 mt-1">숙소는 다른 투숙객과 함께 쓰는 공간입니다. 야간 소음에 유의해 주세요.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="map-section" class="py-12 bg-slate-50 border-t border-slate-200">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-8">
-                <span class="text-indigo-600 font-black tracking-widest text-xs uppercase">ANIMATED ROUTING MAP</span>
-                <h2 class="text-3xl font-bold text-slate-800 tracking-tight font-title mt-2">한눈에 보는 동선 지도</h2>
-                <p class="text-slate-500 mt-2 text-sm md:text-base">실제 도로를 따라 이동 순서가 천천히 그려집니다. 일자 버튼을 누르면 해당 구간만 볼 수 있습니다.</p>
-                <p id="map-hint" class="text-slate-400 mt-1 text-xs">전체 일정 — 도계에서 강원·인천·서해안·부여를 거쳐 다시 도계로 돌아오는 도로 동선</p>
-            </div>
-            <div class="flex flex-wrap justify-center gap-2 mb-6">
-                <button type="button" onclick="filterMap('all')" id="btn-map-all" class="map-btn px-4 py-2 rounded-full text-sm font-bold bg-slate-800 text-white shadow-sm transition-colors">전체 여정</button>
-                <button type="button" onclick="filterMap('day1')" id="btn-map-day1" class="map-btn px-4 py-2 rounded-full text-sm font-bold bg-white border border-slate-300 text-slate-600 shadow-sm transition-colors">1일차(춘천·철원)</button>
-                <button type="button" onclick="filterMap('day2')" id="btn-map-day2" class="map-btn px-4 py-2 rounded-full text-sm font-bold bg-white border border-slate-300 text-slate-600 shadow-sm transition-colors">2일차(철원·인천)</button>
-                <button type="button" onclick="filterMap('day3')" id="btn-map-day3" class="map-btn px-4 py-2 rounded-full text-sm font-bold bg-white border border-slate-300 text-slate-600 shadow-sm transition-colors">3일차(안면도·대천)</button>
-                <button type="button" onclick="filterMap('day4')" id="btn-map-day4" class="map-btn px-4 py-2 rounded-full text-sm font-bold bg-white border border-slate-300 text-slate-600 shadow-sm transition-colors">4일차(부여·귀가)</button>
-            </div>
-            <div class="max-w-5xl mx-auto border border-slate-200 rounded-2xl p-1 shadow-lg bg-white relative z-0">
-                <div id="map-wrap">
-                    <div id="map"></div>
-                    <div id="map-leg-card" class="is-idle" aria-live="polite">
-                        <span class="map-chip-label"><i class="fa-solid fa-route text-indigo-500 mr-1"></i>이동 구간 · 메모</span>
-                        <span id="map-status-from">전체 여정</span>
-                        <span id="map-status-arrow">→</span>
-                        <span id="map-status-to">도로 동선 재생</span>
-                        <div class="map-leg-meta">
-                            <span id="map-leg-dist">계산 중</span>
-                            <span id="map-leg-time">단체 기준</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="schedule" class="py-16 bg-white border-t border-slate-100">
-        <div class="container mx-auto px-4">
-            <div class="max-w-4xl mx-auto">
-                <div class="mb-10">
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-center sm:text-left">
-                        <h2 class="text-2xl md:text-3xl font-bold font-title">세부 일정</h2>
-                        <button type="button" onclick="printItinerary()" class="inline-flex items-center justify-center gap-1.5 self-center sm:self-auto bg-slate-800 text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-md hover:bg-slate-700 active:scale-[0.98] transition shrink-0">
-                            <i class="fa-solid fa-print"></i> 일정표 인쇄하기
-                        </button>
-                    </div>
-                    <p class="text-slate-500 text-sm mt-2 text-center sm:text-left">탭을 눌러 일자별 상세 내용을 확인하세요.</p>
-                    <p class="text-xs text-red-500 mt-2 font-bold bg-red-50 inline-block px-3 py-1 rounded-full shadow-sm"><i class="fa-solid fa-circle-exclamation"></i> 상기 상세 일정은 도로 및 현지 사정에 의해 변동될 수 있습니다.</p>
-                </div>
-                <div class="flex overflow-x-auto no-scrollbar gap-2 mb-8 justify-start md:justify-center px-2">
-                    <button class="tab-btn active shrink-0 px-5 py-3 rounded-2xl border-2 border-indigo-600 bg-indigo-600 text-white font-bold text-sm transition" onclick="openTab(event, 'day1')">1일차 (4/1 목)</button>
-                    <button class="tab-btn shrink-0 px-5 py-3 rounded-2xl border-2 border-slate-200 bg-white text-slate-500 font-bold text-sm transition" onclick="openTab(event, 'day2')">2일차 (4/2 금)</button>
-                    <button class="tab-btn shrink-0 px-5 py-3 rounded-2xl border-2 border-slate-200 bg-white text-slate-500 font-bold text-sm transition" onclick="openTab(event, 'day3')">3일차 (4/3 토)</button>
-                    <button class="tab-btn shrink-0 px-5 py-3 rounded-2xl border-2 border-slate-200 bg-white text-slate-500 font-bold text-sm transition" onclick="openTab(event, 'day4')">4일차 (4/4 일)</button>
-                </div>
-                <div class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
-                    <div id="day1" class="tab-content p-6 md:p-8">
-                        <div class="flex items-center gap-4 mb-6">
-                            <span class="text-4xl bg-amber-100 p-3 rounded-2xl">🚡</span>
-                            <div>
-                                <h3 class="font-bold text-2xl text-slate-800 font-title">도계에서 춘천·철원</h3>
-                                <p class="text-amber-700 font-medium text-sm">도계 → 삼악산 → 남이섬 → 고석정 → 철원 숙소</p>
-                            </div>
-                        </div>
-                        <div class="space-y-6">
-                            <div class="relative pl-8 border-l-2 border-amber-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-slate-700"></div>
-                                <h4 class="font-bold text-lg">도계 출발</h4>
-                                <p class="text-slate-500 text-sm mt-1">도계에서 전용버스에 탑승합니다.</p>
-                            </div>
-                            <div class="relative pl-8 border-l-2 border-amber-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-amber-500"></div>
-                                <div class="schedule-media">
-                                    <div class="schedule-desc">
-                                        <h4 class="font-bold text-lg">춘천 삼악산 케이블카</h4>
-                                        <p class="text-slate-500 text-sm mt-1">삼악산 케이블카로 춘천 호수와 산 능선을 내려다봅니다.</p>
-                                    </div>
-                                    <img src="assets/images/day1-samaksan.jpg" alt="삼악산 케이블카" class="schedule-thumb">
-                                </div>
-                            </div>
-                            <div class="relative pl-8 border-l-2 border-amber-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-red-400"></div>
-                                <h4 class="font-bold text-lg"><span class="inline-block bg-red-100 text-red-700 text-xs px-2 py-0.5 rounded font-bold mr-2">중</span>남이섬 달갈비</h4>
-                            </div>
-                            <div class="relative pl-8 border-l-2 border-amber-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-orange-500"></div>
-                                <div class="schedule-media">
-                                    <div class="schedule-desc">
-                                        <h4 class="font-bold text-lg">철원 주상절리 · 고석정</h4>
-                                        <p class="text-slate-500 text-sm mt-1">한탄강 주상절리와 고석정의 기암 절경을 둘러봅니다.</p>
-                                    </div>
-                                    <img src="assets/images/day1-goseokjeong.jpg" alt="고석정" class="schedule-thumb">
-                                </div>
-                            </div>
-                            <div class="relative pl-8 border-l-2 border-amber-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-rose-500"></div>
-                                <h4 class="font-bold text-lg"><span class="inline-block bg-rose-100 text-rose-700 text-xs px-2 py-0.5 rounded font-bold mr-2">석</span>밀물고기 매운탕</h4>
-                            </div>
-                            <div class="relative pl-8 border-l-2 border-amber-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-teal-600"></div>
-                                <h4 class="font-bold text-lg">철원 숙박</h4>
-                                <p class="text-slate-500 text-sm mt-1">철원 숙소 체크인 · 안내 초안</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="day2" class="tab-content hidden p-6 md:p-8">
-                        <div class="flex items-center gap-4 mb-6">
-                            <span class="text-4xl bg-sky-100 p-3 rounded-2xl">🚢</span>
-                            <div>
-                                <h3 class="font-bold text-2xl text-slate-800 font-title">철원 안보, 인천 월미도</h3>
-                                <p class="text-sky-600 font-medium text-sm">안보관광 → 인천 바다열차 → 월미도 유람선 → 월미도 숙소</p>
-                            </div>
-                        </div>
-                        <div class="space-y-6">
-                            <div class="relative pl-8 border-l-2 border-sky-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-orange-500"></div>
-                                <h4 class="font-bold text-lg"><span class="inline-block bg-orange-100 text-orange-700 text-xs px-2 py-0.5 rounded font-bold mr-2">조</span>해장국</h4>
-                            </div>
-                            <div class="relative pl-8 border-l-2 border-sky-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-emerald-500"></div>
-                                <div class="schedule-media">
-                                    <div class="schedule-desc">
-                                        <h4 class="font-bold text-lg">철원 안보관광</h4>
-                                        <p class="text-slate-500 text-sm mt-1">평화전망대 등 안보 코스를 안내 동선에 따라 둘러봅니다.</p>
-                                    </div>
-                                    <img src="assets/images/day2-security.jpg" alt="철원 안보관광" class="schedule-thumb">
-                                </div>
-                            </div>
-                            <div class="relative pl-8 border-l-2 border-sky-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-red-400"></div>
-                                <h4 class="font-bold text-lg"><span class="inline-block bg-red-100 text-red-700 text-xs px-2 py-0.5 rounded font-bold mr-2">중</span>이동갈비</h4>
-                            </div>
-                            <div class="relative pl-8 border-l-2 border-sky-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-slate-500"></div>
-                                <h4 class="font-bold text-lg">인천 이동</h4>
-                                <p class="text-slate-500 text-sm mt-1">전용버스로 인천 월미도 권역으로 이동합니다.</p>
-                            </div>
-                            <div class="relative pl-8 border-l-2 border-sky-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-sky-500"></div>
-                                <div class="schedule-media">
-                                    <div class="schedule-desc">
-                                        <h4 class="font-bold text-lg">인천 바다열차 · 월미도 유람선</h4>
-                                        <p class="text-slate-500 text-sm mt-1">월미바다열차와 유람선으로 인천 앞바다를 즐깁니다.</p>
-                                    </div>
-                                    <img src="assets/images/day2-wolmido.jpg" alt="월미도" class="schedule-thumb">
-                                </div>
-                            </div>
-                            <div class="relative pl-8 border-l-2 border-sky-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-rose-500"></div>
-                                <h4 class="font-bold text-lg"><span class="inline-block bg-rose-100 text-rose-700 text-xs px-2 py-0.5 rounded font-bold mr-2">석</span>회정식</h4>
-                            </div>
-                            <div class="relative pl-8 border-l-2 border-sky-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-teal-600"></div>
-                                <h4 class="font-bold text-lg">월미도 숙박</h4>
-                                <p class="text-slate-500 text-sm mt-1">월미도 숙소 체크인 · 안내 초안</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="day3" class="tab-content hidden p-6 md:p-8">
-                        <div class="flex items-center gap-4 mb-6">
-                            <span class="text-4xl bg-emerald-100 p-3 rounded-2xl">🌸</span>
-                            <div>
-                                <h3 class="font-bold text-2xl text-slate-800 font-title">안면도·홍성·대천</h3>
-                                <p class="text-emerald-700 font-medium text-sm">안면도 꽃박람회 → 홍성 스카이워크 → 대천 모노레일 → 대천 숙소</p>
-                            </div>
-                        </div>
-                        <div class="space-y-6">
-                            <div class="relative pl-8 border-l-2 border-emerald-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-orange-500"></div>
-                                <h4 class="font-bold text-lg"><span class="inline-block bg-orange-100 text-orange-700 text-xs px-2 py-0.5 rounded font-bold mr-2">조</span>꽃게탕</h4>
-                            </div>
-                            <div class="relative pl-8 border-l-2 border-emerald-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-pink-500"></div>
-                                <div class="schedule-media">
-                                    <div class="schedule-desc">
-                                        <h4 class="font-bold text-lg">안면도 꽃박람회</h4>
-                                        <p class="text-slate-500 text-sm mt-1">봄 꽃박람회 단지를 걸어 보며 서해안의 봄을 만끽합니다.</p>
-                                    </div>
-                                    <img src="assets/images/day3-anmyeon.jpg" alt="안면도 꽃박람회" class="schedule-thumb">
-                                </div>
-                            </div>
-                            <div class="relative pl-8 border-l-2 border-emerald-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-violet-500"></div>
-                                <div class="schedule-media">
-                                    <div class="schedule-desc">
-                                        <h4 class="font-bold text-lg">홍성 스카이워크</h4>
-                                        <p class="text-slate-500 text-sm mt-1">홍성 스카이타워·스카이워크에서 전망을 즐깁니다.</p>
-                                    </div>
-                                    <img src="assets/images/day3-skywalk.jpg" alt="홍성 스카이워크" class="schedule-thumb">
-                                </div>
-                            </div>
-                            <div class="relative pl-8 border-l-2 border-emerald-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-red-400"></div>
-                                <h4 class="font-bold text-lg"><span class="inline-block bg-red-100 text-red-700 text-xs px-2 py-0.5 rounded font-bold mr-2">중</span>한우정식</h4>
-                            </div>
-                            <div class="relative pl-8 border-l-2 border-emerald-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-cyan-500"></div>
-                                <div class="schedule-media">
-                                    <div class="schedule-desc">
-                                        <h4 class="font-bold text-lg">대천 모노레일</h4>
-                                        <p class="text-slate-500 text-sm mt-1">대천해수욕장 권역 모노레일로 해안 풍경을 봅니다.</p>
-                                    </div>
-                                    <img src="assets/images/day3-monorail.jpg" alt="대천 모노레일" class="schedule-thumb">
-                                </div>
-                            </div>
-                            <div class="relative pl-8 border-l-2 border-emerald-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-rose-500"></div>
-                                <h4 class="font-bold text-lg"><span class="inline-block bg-rose-100 text-rose-700 text-xs px-2 py-0.5 rounded font-bold mr-2">석</span>삼합정식</h4>
-                            </div>
-                            <div class="relative pl-8 border-l-2 border-emerald-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-teal-600"></div>
-                                <h4 class="font-bold text-lg">대천 숙박</h4>
-                                <p class="text-slate-500 text-sm mt-1">대천 숙소 체크인 · 안내 초안</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="day4" class="tab-content hidden p-6 md:p-8">
-                        <div class="flex items-center gap-4 mb-6">
-                            <span class="text-4xl bg-violet-100 p-3 rounded-2xl">🏛️</span>
-                            <div>
-                                <h3 class="font-bold text-2xl text-slate-800 font-title">부여 백제, 도계로</h3>
-                                <p class="text-violet-600 font-medium text-sm">백마강 → 백제문화단지 → 제천 석식 → 도계 해산</p>
-                            </div>
-                        </div>
-                        <div class="space-y-6">
-                            <div class="relative pl-8 border-l-2 border-violet-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-orange-500"></div>
-                                <h4 class="font-bold text-lg"><span class="inline-block bg-orange-100 text-orange-700 text-xs px-2 py-0.5 rounded font-bold mr-2">조</span>생선구이 정식</h4>
-                            </div>
-                            <div class="relative pl-8 border-l-2 border-violet-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-amber-500"></div>
-                                <div class="schedule-media">
-                                    <div class="schedule-desc">
-                                        <h4 class="font-bold text-lg">부여 백마강</h4>
-                                        <p class="text-slate-500 text-sm mt-1">백마강과 부소산성 일대를 둘러봅니다.</p>
-                                    </div>
-                                    <img src="assets/images/day4-baekma.jpg" alt="부여 백마강" class="schedule-thumb">
-                                </div>
-                            </div>
-                            <div class="relative pl-8 border-l-2 border-violet-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-violet-500"></div>
-                                <div class="schedule-media">
-                                    <div class="schedule-desc">
-                                        <h4 class="font-bold text-lg">백제문화단지</h4>
-                                        <p class="text-slate-500 text-sm mt-1">백제 왕궁·사찰 재현 공간을 걸어 봅니다.</p>
-                                    </div>
-                                    <img src="assets/images/day4-baekje.jpg" alt="백제문화단지" class="schedule-thumb">
-                                </div>
-                            </div>
-                            <div class="relative pl-8 border-l-2 border-violet-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-red-400"></div>
-                                <h4 class="font-bold text-lg"><span class="inline-block bg-red-100 text-red-700 text-xs px-2 py-0.5 rounded font-bold mr-2">중</span>연잎밥 정식</h4>
-                            </div>
-                            <div class="relative pl-8 border-l-2 border-violet-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-slate-500"></div>
-                                <h4 class="font-bold text-lg">도계 이동</h4>
-                                <p class="text-slate-500 text-sm mt-1">귀가 길에 제천으로 향합니다.</p>
-                            </div>
-                            <div class="relative pl-8 border-l-2 border-violet-200">
-                                <div class="absolute left-[-9px] top-0 w-4 h-4 rounded-full bg-rose-500"></div>
-                                <h4 class="font-bold text-lg"><span class="inline-block bg-rose-100 text-rose-700 text-xs px-2 py-0.5 rounded font-bold mr-2">석</span>제천 샤브올데이</h4>
-                            </div>
-                            <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-200 mt-8 text-center shadow-sm">
-                                <p class="text-sm font-bold text-slate-800">도계 도착 후 해산</p>
-                                <p class="text-sm mt-2 text-slate-600">도계에서 일정이 마무리됩니다.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="hotel" class="py-16 bg-slate-50 border-t border-slate-200">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-10">
-                <span class="text-indigo-500 font-black tracking-widest text-xs uppercase">Accommodation</span>
-                <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mt-2 font-title">숙박 안내</h2>
-                <p class="text-slate-500 text-sm mt-2">3박 · 철원·월미도·대천 · 안내 초안</p>
-            </div>
-            <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-                <div class="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-md">
-                    <div class="h-28 bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center">
-                        <div class="text-center text-amber-800">
-                            <i class="fa-solid fa-hotel text-3xl"></i>
-                            <p class="text-xs font-bold mt-2">1박 · 철원</p>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-lg font-bold text-slate-800 font-title mb-2">철원 숙소</h3>
-                        <p class="text-sm text-slate-600 leading-relaxed">1일차 숙박 · 고석정·안보 권역<br>상세 숙소명은 안내 초안 단계에서 추후 공유합니다.</p>
-                    </div>
-                </div>
-                <div class="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-md">
-                    <div class="h-28 bg-gradient-to-br from-sky-100 to-indigo-100 flex items-center justify-center">
-                        <div class="text-center text-sky-800">
-                            <i class="fa-solid fa-hotel text-3xl"></i>
-                            <p class="text-xs font-bold mt-2">2박 · 월미도</p>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-lg font-bold text-slate-800 font-title mb-2">월미도 숙소</h3>
-                        <p class="text-sm text-slate-600 leading-relaxed">2일차 숙박 · 월미도·바다열차 권역<br>상세 숙소명은 안내 초안 단계에서 추후 공유합니다.</p>
-                    </div>
-                </div>
-                <div class="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-md">
-                    <div class="h-28 bg-gradient-to-br from-emerald-100 to-teal-100 flex items-center justify-center">
-                        <div class="text-center text-emerald-800">
-                            <i class="fa-solid fa-hotel text-3xl"></i>
-                            <p class="text-xs font-bold mt-2">3박 · 대천</p>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-lg font-bold text-slate-800 font-title mb-2">대천 숙소</h3>
-                        <p class="text-sm text-slate-600 leading-relaxed">3일차 숙박 · 대천해수욕장 권역<br>상세 숙소명은 안내 초안 단계에서 추후 공유합니다.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="check" class="py-16 bg-white border-t border-slate-100">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-10">
-                <h2 class="text-2xl font-bold text-slate-800 font-title">🎒 준비물 체크리스트</h2>
-                <p class="text-sm text-slate-500 mt-1">빠진 물건이 없는지 스마트폰으로 체크해 보세요.</p>
-            </div>
-            <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-                <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-lg text-indigo-900">필수 준비물</h3>
-                        <button type="button" onclick="resetChecklist()" class="text-xs text-slate-500 underline hover:text-red-500 bg-white px-2 py-1 rounded border border-slate-200">[초기화]</button>
-                    </div>
-                    <div id="checklist-container" class="space-y-2"></div>
-                </div>
-                <div class="bg-yellow-50 p-6 rounded-2xl border border-yellow-100 shadow-sm">
-                    <h3 class="font-bold text-lg mb-4 text-yellow-800">나만의 메모장</h3>
-                    <textarea id="travel-memo" class="w-full h-64 bg-white p-4 rounded-lg border border-yellow-200 text-slate-700 resize-none focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="살 특산물, 좌석 메모, 동행 연락처 등을 적어 두세요."></textarea>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="contact" class="py-12 bg-white border-t border-slate-100">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-8">
-                <h2 class="text-2xl font-bold text-slate-800 font-title">비상연락 및 안전망</h2>
-                <p class="text-sm text-slate-500 mt-1">현장 문의와 응급 상황 시 바로 활용해 주세요.</p>
-            </div>
-            <div class="max-w-5xl mx-auto">
-                <div class="bg-white p-6 md:p-8 rounded-2xl border border-red-100 shadow-sm mb-6">
-                    <h3 class="text-xl font-bold text-slate-800 mb-5 flex items-center gap-2">
-                        <i class="fa-solid fa-phone-volume text-red-500"></i> 안심 비상연락망
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center gap-4">
-                            <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-headset"></i></div>
-                            <div>
-                                <p class="text-xs font-bold text-indigo-500 mb-0.5">투어메이커 담당</p>
-                                <p class="font-bold text-slate-800 text-sm">정두영 이사</p>
-                                <p class="text-sm text-slate-600 mt-1 font-medium">📞 010-3841-1361</p>
-                            </div>
-                        </div>
-                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center gap-4">
-                            <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-user-shield"></i></div>
-                            <div>
-                                <p class="text-xs font-bold text-blue-500 mb-0.5">투어메이커 총괄</p>
-                                <p class="font-bold text-slate-800 text-sm">이재명 대표</p>
-                                <p class="text-sm text-slate-600 mt-1 font-medium">📞 010-9443-7881</p>
-                            </div>
-                        </div>
-                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center gap-4">
-                            <div class="w-12 h-12 bg-teal-100 text-teal-600 rounded-full flex items-center justify-center text-xl shrink-0"><i class="fa-solid fa-user"></i></div>
-                            <div>
-                                <p class="text-xs font-bold text-teal-600 mb-0.5">가이드</p>
-                                <p class="font-bold text-slate-800 text-sm">가이드 미정</p>
-                                <p class="text-sm text-slate-500 mt-1 font-medium">현지 가이드 · 미정</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <a href="https://indadady.github.io/T-safe24/" target="_blank" rel="noopener" class="block bg-red-50 p-6 md:p-8 rounded-2xl border border-red-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all">
-                    <div class="flex flex-col md:flex-row items-center gap-6">
-                        <div class="w-16 h-16 shrink-0 bg-red-500 rounded-2xl flex items-center justify-center text-white text-3xl">
-                            <i class="fa-solid fa-truck-medical"></i>
-                        </div>
-                        <div class="text-center md:text-left flex-1">
-                            <h3 class="text-xl font-bold text-red-700 mb-2">투어메이커 T-safe24 안전 매뉴얼</h3>
-                            <p class="text-slate-600 text-sm leading-relaxed mb-3">주변 병원 탐색과 SOS 위치 전송을 바로 쓸 수 있는 긴급지원 페이지입니다.</p>
-                            <span class="inline-flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg font-bold text-sm">안전 시스템 열기 <i class="fa-solid fa-arrow-right"></i></span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <section id="weather-esg" class="py-12 sm:py-16 bg-slate-50 border-t border-slate-200">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-8 sm:mb-10">
-                <h2 class="text-xl sm:text-2xl font-bold text-slate-800 font-title">날씨 정보 · ESG 실천</h2>
-                <p class="text-xs sm:text-sm text-slate-500 mt-1 px-2">4월 초 강원·서해안은 낮과 밤의 기온 차가 있습니다. 봄 겉옷을 준비해 주세요.</p>
-            </div>
-            <div class="grid md:grid-cols-2 gap-5 sm:gap-8 max-w-6xl mx-auto">
-                <div class="bg-blue-50/50 p-4 sm:p-6 rounded-2xl border border-blue-100 shadow-sm">
-                    <h3 class="font-bold text-blue-900 text-sm sm:text-base mb-3 sm:mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-cloud-sun text-blue-500 shrink-0"></i>
-                        <span>중부권 5일 날씨 예보</span>
-                    </h3>
-                    <div id="weather-container" class="weather-grid">
-                        <div class="text-sm text-slate-500 py-4 col-span-5 text-center">날씨 정보를 불러오는 중입니다...</div>
-                    </div>
-                    <div class="mt-3 sm:mt-4 bg-white p-3 rounded-lg border border-blue-100 text-xs sm:text-sm text-slate-600 font-medium flex gap-2 items-start">
-                        <i class="fa-solid fa-shirt text-blue-500 mt-0.5 shrink-0"></i>
-                        <p class="leading-relaxed">케이블카·유람선·스카이워크 구간은 바람이 있을 수 있습니다. <strong>봄 겉옷</strong>을 챙겨 주세요.</p>
-                    </div>
-                </div>
-                <div class="bg-green-50/50 p-4 sm:p-6 rounded-2xl border border-green-100 shadow-sm">
-                    <h3 class="font-bold text-green-900 text-sm sm:text-base mb-3 sm:mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-leaf text-green-500 shrink-0"></i>
-                        <span>ESG 실천 대시보드</span>
-                    </h3>
-                    <div class="grid grid-cols-3 gap-1.5 sm:gap-3 text-center mb-3 sm:mb-4">
-                        <div class="bg-white p-2.5 sm:p-3 rounded-xl shadow-sm border border-green-100 min-w-0">
-                            <i class="fa-solid fa-tree text-green-500 text-base sm:text-xl mb-1"></i>
-                            <p class="esg-stat-label text-[10px] sm:text-[11px] text-slate-500 font-bold">종이 절감</p>
-                            <p class="font-black text-green-700 text-sm sm:text-lg mt-0.5" id="esg-paper">0장</p>
-                        </div>
-                        <div class="bg-white p-2.5 sm:p-3 rounded-xl shadow-sm border border-green-100 min-w-0">
-                            <i class="fa-solid fa-smog text-slate-400 text-base sm:text-xl mb-1"></i>
-                            <p class="esg-stat-label text-[10px] sm:text-[11px] text-slate-500 font-bold">탄소 감소</p>
-                            <p class="font-black text-slate-700 text-sm sm:text-lg mt-0.5" id="esg-carbon">0g</p>
-                        </div>
-                        <div class="bg-white p-2.5 sm:p-3 rounded-xl shadow-sm border border-green-100 min-w-0">
-                            <i class="fa-solid fa-droplet text-blue-400 text-base sm:text-xl mb-1"></i>
-                            <p class="esg-stat-label text-[10px] sm:text-[11px] text-slate-500 font-bold">물 절약</p>
-                            <p class="font-black text-blue-700 text-sm sm:text-lg mt-0.5" id="esg-water">0L</p>
-                        </div>
-                    </div>
-                    <p class="text-[11px] sm:text-xs text-slate-600 leading-relaxed bg-white p-3 rounded-lg border border-green-100" id="esg-desc">계산중...</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="proposal" class="py-16 bg-white border-t border-slate-200">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-8 max-w-3xl mx-auto">
-                <span class="text-[#004098] font-black tracking-widest text-xs uppercase">Paper Pack</span>
-                <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mt-2 font-title">종이로 보는 전체 자료</h2>
-                <p class="text-slate-600 text-sm md:text-base mt-3 leading-relaxed">
-                    스마트폰·PC 화면은 글씨가 작아 시니어분들이 한눈에 보기 어렵다는 피드백이 있었습니다.
-                    그래서 <strong class="text-slate-800">설명용 표지 1장</strong>을 앞에 붙이고, 이어지는 장은
-                    <strong class="text-slate-800">이미 있는 일정표·준비물 인쇄본을 그대로</strong> 이어서 출력합니다.
-                    일정 내용을 따로 한 번 더 만들지 않습니다.
-                </p>
-            </div>
-
-            <div class="max-w-3xl mx-auto grid sm:grid-cols-2 gap-3 mb-8 text-sm">
-                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                    <p class="font-bold text-slate-800 mb-1"><i class="fa-solid fa-print text-slate-600 mr-1"></i>일정표만 인쇄</p>
-                    <p class="text-slate-600 leading-relaxed">결재·서류용. 상세 일정표 + 준비물·QR (A4 2장)</p>
-                </div>
-                <div class="rounded-2xl border border-[#004098]/30 bg-indigo-50/60 p-4">
-                    <p class="font-bold text-[#004098] mb-1"><i class="fa-solid fa-file-lines mr-1"></i>전체 자료 인쇄</p>
-                    <p class="text-slate-600 leading-relaxed">표지(왜·하이라이트) 1장 + 위 일정표·준비물 그대로 (총 A4 3장)</p>
-                </div>
-            </div>
-
-            <div class="flex flex-col sm:flex-row justify-center gap-3 mb-10">
-                <button type="button" onclick="printProposal()" class="inline-flex items-center justify-center gap-2 bg-[#004098] text-white px-6 py-3.5 rounded-2xl text-base font-bold shadow-lg hover:bg-[#002d6b] active:scale-[0.98] transition">
-                    <i class="fa-solid fa-file-lines"></i> 전체 자료 인쇄하기
-                </button>
-                <button type="button" onclick="printItinerary()" class="inline-flex items-center justify-center gap-2 bg-slate-800 text-white px-6 py-3.5 rounded-2xl text-base font-bold shadow-lg hover:bg-slate-700 active:scale-[0.98] transition">
-                    <i class="fa-solid fa-print"></i> 일정표·준비물만 인쇄
-                </button>
-            </div>
-
-            <div class="prop-preview max-w-4xl mx-auto">
-                <div class="prop-hero">
-                    <p class="text-xs font-bold tracking-wide text-white/80 mb-2">TM-270401-DG · 전체 자료 1/3 (표지)</p>
-                    <h3 class="text-2xl md:text-3xl font-black leading-snug mb-2">도계누나들<br class="sm:hidden"> 강원·서해안 3박 4일</h3>
-                    <p class="text-sm md:text-base text-white/90 font-medium leading-relaxed">표지에는 여행 한눈에 보기만 · 상세 일정·준비물은 이어지는 기존 인쇄본</p>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-5 text-sm">
-                        <div class="bg-white/10 rounded-xl px-3 py-2 border border-white/15"><span class="block text-white/70 text-xs font-bold mb-0.5">행사기간</span><strong>2027. 4. 1 ~ 4. 4</strong></div>
-                        <div class="bg-white/10 rounded-xl px-3 py-2 border border-white/15"><span class="block text-white/70 text-xs font-bold mb-0.5">행사인원</span><strong>7명 · 도계누나들</strong></div>
-                        <div class="bg-white/10 rounded-xl px-3 py-2 border border-white/15"><span class="block text-white/70 text-xs font-bold mb-0.5">이용교통</span><strong>전용버스</strong></div>
-                    </div>
-                </div>
-                <div class="p-5 md:p-7 space-y-4">
-                    <p class="text-slate-700 text-[15px] leading-relaxed font-medium border-l-4 border-[#004098] pl-4 bg-slate-50 py-3 rounded-r-xl">
-                        <strong>왜 만들었나요?</strong> 화면 가이드북은 지도·당일 UI에 강하고, 종이는 “한 장씩 넘기며 설명·공유”에 강합니다.
-                        일정·식사·준비물 문구는 일정표 인쇄와 <strong>같은 원본</strong>을 쓰므로 내용이 어긋나지 않습니다.
-                    </p>
-                    <ol class="space-y-2 text-sm text-slate-700 font-medium">
-                        <li class="flex gap-3"><span class="shrink-0 w-7 h-7 rounded-full bg-[#004098] text-white flex items-center justify-center text-xs font-black">1</span><span><strong>표지</strong> — 여행 개요·네 가지 포인트(사진)</span></li>
-                        <li class="flex gap-3"><span class="shrink-0 w-7 h-7 rounded-full bg-slate-800 text-white flex items-center justify-center text-xs font-black">2</span><span><strong>일정표</strong> — 세부 일정 옆 「일정표 인쇄하기」와 동일</span></li>
-                        <li class="flex gap-3"><span class="shrink-0 w-7 h-7 rounded-full bg-slate-800 text-white flex items-center justify-center text-xs font-black">3</span><span><strong>준비물·QR</strong> — 역시 동일 원본</span></li>
-                    </ol>
-                    <p class="text-xs text-slate-500 text-center pt-1">PDF 파일명: <span class="font-bold text-slate-700">270401_국내여행_전체자료</span></p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer style="background-color: #f8f9fa;" class="py-12 border-t border-slate-200">
-        <div class="container mx-auto px-4 text-center">
-            <a href="http://tourmaker.kr" target="_blank" rel="noopener" class="inline-block bg-white border border-slate-300 rounded-xl px-6 py-3 hover:shadow-md mb-6">
-                <div class="flex items-center gap-3">
-                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgHfgIX70O5k6Anuo0UgALIdaG9jSga9auHu3uyz0uEirylGPAJnjN_qQbvEGMUvPqUQf_g9FMNUHRxlDcUBf4vZ3Mpy4TnA9WxbmzWYK11gt2zuy_Irl4wctNFjcjLyPo0GPXV792o_J7L9guRMuDfeC1gy7USwywjYbECZgzcsHybuGRRAXAnO1eNmP8/s320/logo.png" alt="Tourmaker" class="h-6">
-                    <span class="text-sm font-bold text-slate-700">홈페이지 바로가기</span>
-                </div>
-            </a>
-            <p class="text-xs text-slate-500 max-w-2xl mx-auto leading-relaxed mb-6">[System Powered by TOURMAKER] 본 스마트 가이드북은 도계누나들 강원·서해안 일정 안내와 <a href="http://tourmaker.kr" target="_blank" rel="noopener" class="font-bold underline">투어메이커</a>의 트래블 테크 기술 제휴로 제작되었습니다.</p>
-            <p class="text-[10px] text-slate-400">&copy; 2027 Tourmaker Inc. All rights reserved.</p>
-        </div>
-    </footer>
-    </div>
-
-    <!-- 전체자료 표지(1장) — 일정·준비물은 아래 #print-area 원본을 이어서 출력 -->
+    <!-- 가이드북 인쇄 (일정표·준비물 제외) -->
     <div id="proposal-print-area">
         <div class="prop-sheet">
             <div class="prop-head">
                 <img src="https://blogger.googleusercontent.com/img/a/AVvXsEitI-Z-hD82keOJ1AqHw-VTZjpw2U-O5UjtV9h3zblyG0wjsVfBWe9X9o0Q_Spctrt7krkd9qXO0xKTmGJLw4gyMZrRqpshKMFttnyx6OcC8-IGz3XLUZpGQOnRqVdol8jz5HuoDLqsEifnVRhcjUJHm13Sz8JrX9aPswMNUwZPvGtJEnQjhc2PiXlo-B8" alt="투어메이커 로고">
-                <div class="doc">문서번호: TM-270401-DG · 전체자료 1/3</div>
+                <div class="doc">TM-270401-DG · 1/4</div>
             </div>
-            <span class="prop-cover-badge">종이 전체 자료 · 표지</span>
+            <span class="prop-cover-badge">스마트 가이드북</span>
             <h1 class="prop-cover-title">도계누나들<br>강원·서해안 3박 4일</h1>
-            <p class="prop-cover-sub">화면이 불편한 분을 위한 인쇄용 묶음입니다. 이 표지 다음 장은 일정표·준비물 인쇄본과 동일한 원본입니다.</p>
+            <p class="prop-cover-sub">전용버스로 떠나는 소규모 국내여행 · 춘천·철원·인천·안면도·부여</p>
             <div class="prop-meta">
                 <div><span class="k">행사기간</span><span class="v">2027. 04. 01 (목) ~ 04. 04 (일)</span></div>
                 <div><span class="k">행사인원</span><span class="v">7명 · 도계누나들</span></div>
                 <div><span class="k">이용교통</span><span class="v">전용버스</span></div>
             </div>
-            <p class="prop-lead">
-                도계 출발 → 춘천 삼악산·남이섬 → 철원 고석정·안보관광 → 인천 월미도 → 안면도·홍성·대천 → 부여 백제 → 제천 석식 후 도계 해산.
-                자연·바다·봄 풍경·역사를 여유 있게 잇는 여정입니다.
-            </p>
-            <h2 class="prop-h2">이번 여행의 네 가지 포인트</h2>
+            <p class="prop-lead">도계 출발 → 삼악산·남이섬 → 철원 고석정·안보 → 인천 월미도 → 안면도·대천 → 부여 백제 → 제천 석식 후 도계 해산.</p>
+            <h2 class="prop-h2">여행 포인트</h2>
             <div class="prop-hl-grid">
-                <div class="prop-hl">
-                    <img src="assets/images/day1-samaksan.jpg" alt="삼악산">
-                    <div class="body"><strong>삼악산 · 남이섬</strong><span>춘천 케이블카와 남이섬 달갈비로 여행을 엽니다.</span></div>
+                <div class="prop-hl"><img src="assets/images/day1-samaksan.jpg" alt="삼악산"><div class="body"><strong>삼악산 · 남이섬</strong><span>춘천 케이블카와 남이섬 달갈비</span></div></div>
+                <div class="prop-hl"><img src="assets/images/day1-goseokjeong.jpg" alt="고석정"><div class="body"><strong>철원 고석정 · 안보</strong><span>주상절리와 안보관광</span></div></div>
+                <div class="prop-hl"><img src="assets/images/day2-wolmido.jpg" alt="월미도"><div class="body"><strong>인천 월미도</strong><span>바다열차와 유람선</span></div></div>
+                <div class="prop-hl"><img src="assets/images/day3-anmyeon.jpg" alt="안면도"><div class="body"><strong>안면도 · 부여</strong><span>꽃박람회와 백제 문화</span></div></div>
+            </div>
+            <div class="prop-foot"><div>TOURMAKER</div><div class="mgr">정두영 이사 010-3841-1361</div></div>
+        </div>
+
+        <div class="prop-sheet">
+            <div class="prop-head"><img src="https://blogger.googleusercontent.com/img/a/AVvXsEitI-Z-hD82keOJ1AqHw-VTZjpw2U-O5UjtV9h3zblyG0wjsVfBWe9X9o0Q_Spctrt7krkd9qXO0xKTmGJLw4gyMZrRqpshKMFttnyx6OcC8-IGz3XLUZpGQOnRqVdol8jz5HuoDLqsEifnVRhcjUJHm13Sz8JrX9aPswMNUwZPvGtJEnQjhc2PiXlo-B8" alt="투어메이커 로고"><div class="doc">TM-270401-DG · 2/4</div></div>
+            <h2 class="prop-h2">이동 · 숙소 · 동선</h2>
+            <div class="prop-info-grid">
+                <div class="prop-info-card">
+                    <h3>차량 이동</h3>
+                    <ul>
+                        <li>전 일정 전용버스</li>
+                        <li>1일차 07:00 도계 출발</li>
+                        <li>4일차 제천 석식 후 도계 해산</li>
+                    </ul>
                 </div>
-                <div class="prop-hl">
-                    <img src="assets/images/day1-goseokjeong.jpg" alt="고석정">
-                    <div class="body"><strong>철원 고석정 · 안보</strong><span>주상절리·고석정과 안보관광으로 철원을 담습니다.</span></div>
-                </div>
-                <div class="prop-hl">
-                    <img src="assets/images/day2-wolmido.jpg" alt="월미도">
-                    <div class="body"><strong>인천 월미도</strong><span>바다열차와 유람선으로 인천 앞바다를 즐깁니다.</span></div>
-                </div>
-                <div class="prop-hl">
-                    <img src="assets/images/day3-anmyeon.jpg" alt="안면도">
-                    <div class="body"><strong>안면도 · 부여 백제</strong><span>꽃박람회·스카이워크와 백마강·백제문화단지.</span></div>
+                <div class="prop-info-card">
+                    <h3>숙박 (3박)</h3>
+                    <ul>
+                        <li>1박 철원 · 2박 월미도 · 3박 대천</li>
+                        <li>숙소명은 추후 안내</li>
+                    </ul>
                 </div>
             </div>
-            <p style="margin:12px 0 0;padding:10px 12px;border:1.5px solid #004098;border-radius:8px;background:#f8fafc;font-size:12.5px;font-weight:700;color:#0f172a;line-height:1.5;">
-                다음 장부터는 「일정표 인쇄하기」와 같은 일정표·준비물·QR이 이어집니다. (내용 중복 작성 없음)
-            </p>
-            <div class="prop-foot">
-                <div>[System Powered by TOURMAKER]</div>
-                <div class="mgr">담당: 정두영 이사 010-3841-1361</div>
+            <div class="prop-day-block"><div class="day-top"><strong>1일차 4/1</strong><em>도계→철원</em></div><ul><li>삼악산 케이블카 · 남이섬 · 고석정 · 철원 숙소</li></ul></div>
+            <div class="prop-day-block"><div class="day-top"><strong>2일차 4/2</strong><em>철원→인천</em></div><ul><li>안보관광 · 바다열차 · 월미도 유람선 · 월미도 숙소</li></ul></div>
+            <div class="prop-day-block"><div class="day-top"><strong>3일차 4/3</strong><em>서해안</em></div><ul><li>안면도 꽃박람회 · 홍성 스카이워크 · 대천 모노레일 · 대천 숙소</li></ul></div>
+            <div class="prop-day-block"><div class="day-top"><strong>4일차 4/4</strong><em>부여→도계</em></div><ul><li>백마강 · 백제문화단지 · 제천 샤브 · 도계 해산</li></ul></div>
+            <p style="font-size:11.5px;color:#64748b;text-align:right;font-weight:600;">상세 일정표는 「일정표 인쇄하기」에서 확인하세요.</p>
+            <div class="prop-foot"><div>TOURMAKER</div><div class="mgr">이재명 대표 010-9443-7881</div></div>
+        </div>
+
+        <div class="prop-sheet">
+            <div class="prop-head"><img src="https://blogger.googleusercontent.com/img/a/AVvXsEitI-Z-hD82keOJ1AqHw-VTZjpw2U-O5UjtV9h3zblyG0wjsVfBWe9X9o0Q_Spctrt7krkd9qXO0xKTmGJLw4gyMZrRqpshKMFttnyx6OcC8-IGz3XLUZpGQOnRqVdol8jz5HuoDLqsEifnVRhcjUJHm13Sz8JrX9aPswMNUwZPvGtJEnQjhc2PiXlo-B8" alt="투어메이커 로고"><div class="doc">TM-270401-DG · 3/4</div></div>
+            <h2 class="prop-h2">1–2일차 주요 장소</h2>
+            <div class="prop-day-block">
+                <div class="day-top"><strong>1일차</strong><em>4/1</em></div>
+                <div class="prop-hl-grid" style="margin-top:8px;margin-bottom:0;">
+                    <div class="prop-hl"><img src="assets/images/day1-samaksan.jpg" alt="삼악산"><div class="body"><strong>삼악산 케이블카</strong><span>춘천 호수와 산 능선</span></div></div>
+                    <div class="prop-hl"><img src="assets/images/day1-goseokjeong.jpg" alt="고석정"><div class="body"><strong>고석정</strong><span>한탄강 주상절리</span></div></div>
+                </div>
+                <ul style="margin-top:8px;"><li>중식 남이섬 달갈비 · 석식 밀물고기 매운탕 · 철원 숙박</li></ul>
             </div>
+            <div class="prop-day-block">
+                <div class="day-top"><strong>2일차</strong><em>4/2</em></div>
+                <div class="prop-hl-grid" style="margin-top:8px;margin-bottom:0;">
+                    <div class="prop-hl"><img src="assets/images/day2-security.jpg" alt="안보"><div class="body"><strong>철원 안보관광</strong><span>평화전망대 등</span></div></div>
+                    <div class="prop-hl"><img src="assets/images/day2-wolmido.jpg" alt="월미도"><div class="body"><strong>월미도</strong><span>바다열차 · 유람선</span></div></div>
+                </div>
+                <ul style="margin-top:8px;"><li>조식 해장국 · 중식 이동갈비 · 석식 회정식 · 월미도 숙박</li></ul>
+            </div>
+            <div class="prop-foot"><div>TOURMAKER</div><div class="mgr">가이드 미정</div></div>
+        </div>
+
+        <div class="prop-sheet">
+            <div class="prop-head"><img src="https://blogger.googleusercontent.com/img/a/AVvXsEitI-Z-hD82keOJ1AqHw-VTZjpw2U-O5UjtV9h3zblyG0wjsVfBWe9X9o0Q_Spctrt7krkd9qXO0xKTmGJLw4gyMZrRqpshKMFttnyx6OcC8-IGz3XLUZpGQOnRqVdol8jz5HuoDLqsEifnVRhcjUJHm13Sz8JrX9aPswMNUwZPvGtJEnQjhc2PiXlo-B8" alt="투어메이커 로고"><div class="doc">TM-270401-DG · 4/4</div></div>
+            <h2 class="prop-h2">3–4일차 · 연락처</h2>
+            <div class="prop-day-block">
+                <div class="day-top"><strong>3일차</strong><em>4/3</em></div>
+                <div class="prop-hl-grid" style="margin-top:8px;margin-bottom:0;">
+                    <div class="prop-hl"><img src="assets/images/day3-anmyeon.jpg" alt="안면도"><div class="body"><strong>안면도 꽃박람회</strong><span>서해안 봄 풍경</span></div></div>
+                    <div class="prop-hl"><img src="assets/images/day3-skywalk.jpg" alt="스카이워크"><div class="body"><strong>홍성 스카이워크</strong><span>대천 모노레일</span></div></div>
+                </div>
+                <ul style="margin-top:8px;"><li>조식 꽃게탕 · 중식 한우 · 석식 삼합 · 대천 숙박</li></ul>
+            </div>
+            <div class="prop-day-block">
+                <div class="day-top"><strong>4일차</strong><em>4/4</em></div>
+                <div class="prop-hl-grid" style="margin-top:8px;margin-bottom:0;">
+                    <div class="prop-hl"><img src="assets/images/day4-baekma.jpg" alt="백마강"><div class="body"><strong>부여 백마강</strong><span>부소산성 일대</span></div></div>
+                    <div class="prop-hl"><img src="assets/images/day4-baekje.jpg" alt="백제"><div class="body"><strong>백제문화단지</strong><span>제천 샤브 후 도계 해산</span></div></div>
+                </div>
+                <ul style="margin-top:8px;"><li>조식 생선구이 · 중식 연잎밥 · 석식 샤브올데이</li></ul>
+            </div>
+            <div class="prop-contact-row">
+                <div class="prop-contact-card"><div class="role">담당</div><div class="name">정두영 이사</div><div class="tel">010-3841-1361</div></div>
+                <div class="prop-contact-card"><div class="role">총괄</div><div class="name">이재명 대표</div><div class="tel">010-9443-7881</div></div>
+            </div>
+            <div class="print-qr-box">
+                <img src="assets/images/guidebook-qr.png" alt="QR" width="118" height="118">
+                <div class="qr-copy">
+                    <strong>스마트폰 가이드북</strong>
+                    지도·당일 일정·날씨는 여기서 확인하세요.
+                    <div class="qr-url">https://indadady.github.io/270401_Domestic/</div>
+                </div>
+            </div>
+            <div class="prop-foot"><div>TOURMAKER</div><div class="mgr">정두영 이사 010-3841-1361</div></div>
         </div>
     </div>
 
@@ -1252,7 +309,7 @@
             '2027-04-04': 'day4'
         };
         const PRINT_FILENAME_ITINERARY = '270401_국내여행_일정표';
-        const PRINT_FILENAME_PROPOSAL = '270401_국내여행_전체자료';
+        const PRINT_FILENAME_PROPOSAL = '270401_국내여행_가이드북';
         const PAGE_TITLE = document.title;
         let activePrintFilename = PRINT_FILENAME_ITINERARY;
         function syncPrintDocLabels(mode) {
