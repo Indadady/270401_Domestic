@@ -195,7 +195,7 @@
             #proposal-print-area { display: none !important; }
         }
         @media print {
-            @page { size: A4 portrait; margin: 12mm 10mm; }
+            @page { size: A4 portrait; margin: 10mm 9mm; }
             body { background-color: #ffffff !important; font-size: 10pt; color: #1e293b !important; }
             a[href]:after { content: none !important; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
@@ -262,39 +262,45 @@
             .print-qr-box .qr-copy strong { color: #004098; font-size: 14px; display: block; margin-bottom: 4px; }
             .print-qr-box .qr-url { color: #475569; font-size: 11px; word-break: break-all; font-weight: 500; }
 
-            /* 디지털 제안서 인쇄 */
-            .prop-sheet { width: 100%; }
+            /* 디지털 제안서 인쇄 — 글자·이미지를 키워 아래 공백 최소화 */
+            .prop-sheet {
+                width: 100%;
+                display: flex; flex-direction: column;
+                min-height: 277mm;
+                box-sizing: border-box;
+            }
             .prop-sheet + .prop-sheet { page-break-before: always; break-before: page; }
             .prop-head {
                 display: flex; justify-content: space-between; align-items: flex-end;
-                border-bottom: 3px solid #004098; padding-bottom: 10px; margin-bottom: 16px;
+                border-bottom: 3px solid #004098; padding-bottom: 8px; margin-bottom: 12px;
+                flex-shrink: 0;
             }
-            .prop-head img { height: 34px; object-fit: contain; }
-            .prop-head .doc { text-align: right; font-size: 11px; color: #475569; font-weight: 600; }
+            .prop-head img { height: 36px; object-fit: contain; }
+            .prop-head .doc { text-align: right; font-size: 12px; color: #475569; font-weight: 600; }
             .prop-cover-badge {
-                display: inline-block; background: #004098; color: #fff; font-size: 12px; font-weight: 800;
-                padding: 4px 12px; border-radius: 999px; margin-bottom: 10px;
+                display: inline-block; background: #004098; color: #fff; font-size: 13px; font-weight: 800;
+                padding: 5px 14px; border-radius: 999px; margin-bottom: 10px;
             }
             .prop-cover-title {
-                font-size: 26px; font-weight: 900; color: #0f172a; letter-spacing: -0.04em;
-                line-height: 1.3; margin: 0 0 8px 0;
+                font-size: 30px; font-weight: 900; color: #0f172a; letter-spacing: -0.04em;
+                line-height: 1.28; margin: 0 0 10px 0;
             }
-            .prop-cover-sub { font-size: 14px; color: #334155; font-weight: 600; margin-bottom: 16px; line-height: 1.5; }
+            .prop-cover-sub { font-size: 15.5px; color: #334155; font-weight: 600; margin-bottom: 14px; line-height: 1.5; }
             .prop-meta {
-                display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
-                margin-bottom: 16px;
+                display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+                margin-bottom: 14px;
             }
             .prop-meta div {
-                border: 1px solid #94a3b8; border-radius: 8px; padding: 10px 12px; background: #f8fafc !important;
+                border: 1px solid #94a3b8; border-radius: 8px; padding: 12px 14px; background: #f8fafc !important;
             }
-            .prop-meta .k { display: block; font-size: 11px; font-weight: 800; color: #004098; margin-bottom: 2px; }
-            .prop-meta .v { font-size: 13.5px; font-weight: 700; color: #0f172a; word-break: keep-all; }
+            .prop-meta .k { display: block; font-size: 12px; font-weight: 800; color: #004098; margin-bottom: 3px; }
+            .prop-meta .v { font-size: 14.5px; font-weight: 700; color: #0f172a; word-break: keep-all; }
             .prop-lead {
-                font-size: 13.5px; line-height: 1.65; color: #1e293b; font-weight: 500;
-                border-left: 4px solid #004098; padding: 8px 0 8px 14px; margin-bottom: 16px; background: #f8fafc !important;
+                font-size: 14.5px; line-height: 1.7; color: #1e293b; font-weight: 500;
+                border-left: 4px solid #004098; padding: 12px 0 12px 16px; margin-bottom: 14px; background: #f8fafc !important;
             }
             .prop-h2 {
-                font-size: 15px; font-weight: 900; color: #004098; margin: 0 0 10px 0;
+                font-size: 17px; font-weight: 900; color: #004098; margin: 0 0 12px 0;
                 padding-bottom: 6px; border-bottom: 1px solid #cbd5e1;
             }
             .prop-hl-grid {
@@ -309,59 +315,82 @@
             .prop-hl .body strong { display: block; font-size: 13px; color: #0f172a; margin-bottom: 3px; }
             .prop-hl .body span { font-size: 11.5px; color: #475569; line-height: 1.45; font-weight: 500; }
             .prop-spot {
-                display: grid; grid-template-columns: 118px 1fr; gap: 12px;
-                margin-bottom: 12px; padding-bottom: 12px;
+                display: grid; grid-template-columns: 148px 1fr; gap: 14px; align-items: start;
+                margin-bottom: 14px; padding-bottom: 14px;
                 border-bottom: 1px solid #e2e8f0; page-break-inside: avoid;
+                flex: 1 1 auto;
             }
-            .prop-spot:last-of-type { border-bottom: 0; margin-bottom: 8px; padding-bottom: 0; }
+            .prop-spot:last-of-type { border-bottom: 0; margin-bottom: 10px; padding-bottom: 0; }
             .prop-spot img {
-                width: 118px; height: 92px; object-fit: cover; border-radius: 8px;
+                width: 148px; height: 118px; object-fit: cover; border-radius: 10px;
                 border: 1px solid #cbd5e1; background: #f8fafc;
             }
-            .prop-spot h3 { font-size: 14px; font-weight: 900; color: #004098; margin: 0 0 4px 0; letter-spacing: -0.02em; }
-            .prop-spot p { font-size: 12.5px; line-height: 1.6; color: #1e293b; margin: 0; font-weight: 500; word-break: keep-all; }
-            .prop-spot .tip { display: block; margin-top: 5px; font-size: 11.5px; color: #64748b; font-weight: 700; }
+            .prop-spot h3 { font-size: 16.5px; font-weight: 900; color: #004098; margin: 0 0 6px 0; letter-spacing: -0.02em; }
+            .prop-spot p { font-size: 14px; line-height: 1.65; color: #1e293b; margin: 0; font-weight: 500; word-break: keep-all; }
+            .prop-spot .tip { display: block; margin-top: 7px; font-size: 13px; color: #64748b; font-weight: 700; }
+            /* 방문지가 2곳인 장 — 더 크게 채워 공백 축소 */
+            .prop-sheet--sparse .prop-spot {
+                grid-template-columns: 176px 1fr; gap: 16px;
+                margin-bottom: 18px; padding-bottom: 18px;
+            }
+            .prop-sheet--sparse .prop-spot img { width: 176px; height: 140px; }
+            .prop-sheet--sparse .prop-spot h3 { font-size: 18px; }
+            .prop-sheet--sparse .prop-spot p { font-size: 15px; line-height: 1.7; }
+            .prop-sheet--sparse .prop-spot .tip { font-size: 13.5px; }
+            .prop-note {
+                font-size: 14px; font-weight: 700; color: #0f172a; margin-top: 10px; line-height: 1.55;
+            }
+            .prop-note.soft { font-weight: 500; color: #1e293b; }
+            .prop-note strong { color: #004098; }
             .prop-day-label {
-                display: inline-block; background: #004098; color: #fff; font-size: 11px; font-weight: 800;
-                padding: 3px 10px; border-radius: 999px; margin-bottom: 10px;
+                display: inline-block; background: #004098; color: #fff; font-size: 12.5px; font-weight: 800;
+                padding: 4px 12px; border-radius: 999px; margin-bottom: 10px;
             }
 
             .prop-day-block {
-                border: 1.5px solid #1e293b; border-radius: 10px; padding: 12px 14px;
+                border: 1.5px solid #1e293b; border-radius: 10px; padding: 14px 16px;
                 margin-bottom: 10px; page-break-inside: avoid; background: #fff !important;
+                flex: 1 1 auto;
             }
             .prop-day-block .day-top {
                 display: flex; justify-content: space-between; align-items: baseline;
                 margin-bottom: 6px; gap: 8px;
             }
-            .prop-day-block .day-top strong { font-size: 15px; color: #004098; font-weight: 900; }
-            .prop-day-block .day-top em { font-style: normal; font-size: 12px; color: #64748b; font-weight: 700; }
-            .prop-day-block ul { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.55; color: #1e293b; }
-            .prop-day-block li { margin-bottom: 2px; }
-            .prop-day-block .stay { margin-top: 8px; font-size: 12.5px; font-weight: 800; color: #0f172a; }
-            .prop-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+            .prop-day-block .day-top strong { font-size: 16.5px; color: #004098; font-weight: 900; }
+            .prop-day-block .day-top em { font-style: normal; font-size: 13px; color: #64748b; font-weight: 700; }
+            .prop-day-block ul { margin: 0; padding-left: 18px; font-size: 14.5px; line-height: 1.6; color: #1e293b; }
+            .prop-day-block li { margin-bottom: 3px; }
+            .prop-day-block .stay { margin-top: 8px; font-size: 13.5px; font-weight: 800; color: #0f172a; }
+            .prop-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
             .prop-info-card {
-                border: 1px solid #94a3b8; border-radius: 10px; padding: 12px 14px;
+                border: 1px solid #94a3b8; border-radius: 10px; padding: 16px 16px;
                 background: #f8fafc !important; page-break-inside: avoid;
             }
-            .prop-info-card h3 { font-size: 13px; font-weight: 900; color: #004098; margin: 0 0 6px 0; }
-            .prop-info-card p, .prop-info-card li { font-size: 12.5px; line-height: 1.5; color: #1e293b; font-weight: 500; }
+            .prop-info-card h3 { font-size: 15px; font-weight: 900; color: #004098; margin: 0 0 8px 0; }
+            .prop-info-card p, .prop-info-card li { font-size: 14px; line-height: 1.55; color: #1e293b; font-weight: 500; }
             .prop-info-card ul { margin: 0; padding-left: 16px; }
             .prop-contact-row {
-                display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0;
+                display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0;
             }
             .prop-contact-card {
-                border: 2px solid #004098; border-radius: 10px; padding: 12px 14px;
+                border: 2px solid #004098; border-radius: 10px; padding: 16px 16px;
                 background: #fff !important; page-break-inside: avoid;
             }
-            .prop-contact-card .role { font-size: 11px; font-weight: 800; color: #004098; }
-            .prop-contact-card .name { font-size: 16px; font-weight: 900; color: #0f172a; margin: 2px 0; }
-            .prop-contact-card .tel { font-size: 15px; font-weight: 800; color: #1e293b; }
-            .prop-foot {
-                margin-top: 14px; padding-top: 10px; border-top: 1px solid #e2e8f0;
-                display: flex; justify-content: space-between; align-items: flex-end; font-size: 11px; color: #64748b;
+            .prop-contact-card .role { font-size: 12.5px; font-weight: 800; color: #004098; }
+            .prop-contact-card .name { font-size: 18px; font-weight: 900; color: #0f172a; margin: 4px 0; }
+            .prop-contact-card .tel { font-size: 16.5px; font-weight: 800; color: #1e293b; }
+            body.print-mode-proposal .print-qr-box {
+                padding: 16px 18px; margin-bottom: 0; flex: 1 1 auto; align-items: center;
             }
-            .prop-foot .mgr { text-align: right; border-left: 3px solid #004098; padding-left: 10px; color: #0f172a; font-weight: 800; font-size: 12.5px; }
+            body.print-mode-proposal .print-qr-box img { width: 132px; height: 132px; }
+            body.print-mode-proposal .print-qr-box .qr-copy { font-size: 14px; line-height: 1.55; }
+            body.print-mode-proposal .print-qr-box .qr-copy strong { font-size: 16px; }
+            .prop-foot {
+                margin-top: auto; padding-top: 12px; border-top: 1px solid #e2e8f0;
+                display: flex; justify-content: space-between; align-items: flex-end; font-size: 12px; color: #64748b;
+                flex-shrink: 0;
+            }
+            .prop-foot .mgr { text-align: right; border-left: 3px solid #004098; padding-left: 10px; color: #0f172a; font-weight: 800; font-size: 13.5px; }
         }
     </style>
 </head>
@@ -1043,7 +1072,7 @@
                     <span class="tip">난간이 있는 구간을 이용해 주세요. 사진 촬영 시 발밑을 먼저 확인합니다.</span>
                 </div>
             </div>
-            <p style="font-size:12.5px;font-weight:700;color:#0f172a;margin-top:8px;">식사 · 숙소 — 중식 남이섬 달갈비 · 석식 밀물고기 매운탕 · 철원 숙박</p>
+            <p class="prop-note">식사 · 숙소 — 중식 남이섬 달갈비 · 석식 밀물고기 매운탕 · 철원 숙박</p>
             <div class="prop-foot"><div>TOURMAKER</div><div class="mgr">이재명 대표 010-9443-7881</div></div>
         </div>
 
@@ -1078,7 +1107,7 @@
                     <span class="tip">바닷바람이 있으니 겉옷을 챙기면 편합니다.</span>
                 </div>
             </div>
-            <p style="font-size:12.5px;font-weight:700;color:#0f172a;margin-top:8px;">식사 · 숙소 — 조식 해장국 · 중식 이동갈비 · 석식 회정식 · 월미도 숙박</p>
+            <p class="prop-note">식사 · 숙소 — 조식 해장국 · 중식 이동갈비 · 석식 회정식 · 월미도 숙박</p>
             <div class="prop-foot"><div>TOURMAKER</div><div class="mgr">가이드 미정</div></div>
         </div>
 
@@ -1113,11 +1142,11 @@
                     <span class="tip">석양 무렵에는 바람이 차가울 수 있습니다.</span>
                 </div>
             </div>
-            <p style="font-size:12.5px;font-weight:700;color:#0f172a;margin-top:8px;">식사 · 숙소 — 조식 꽃게탕 · 중식 한우정식 · 석식 삼합정식 · 대천 숙박</p>
+            <p class="prop-note">식사 · 숙소 — 조식 꽃게탕 · 중식 한우정식 · 석식 삼합정식 · 대천 숙박</p>
             <div class="prop-foot"><div>TOURMAKER</div><div class="mgr">정두영 이사 010-3841-1361</div></div>
         </div>
 
-        <div class="prop-sheet">
+        <div class="prop-sheet prop-sheet--sparse">
             <div class="prop-head">
                 <img src="https://blogger.googleusercontent.com/img/a/AVvXsEitI-Z-hD82keOJ1AqHw-VTZjpw2U-O5UjtV9h3zblyG0wjsVfBWe9X9o0Q_Spctrt7krkd9qXO0xKTmGJLw4gyMZrRqpshKMFttnyx6OcC8-IGz3XLUZpGQOnRqVdol8jz5HuoDLqsEifnVRhcjUJHm13Sz8JrX9aPswMNUwZPvGtJEnQjhc2PiXlo-B8" alt="투어메이커 로고">
                 <div class="doc">TM-270401-DG · 5/6</div>
@@ -1140,10 +1169,10 @@
                     <span class="tip">그늘이 적은 구간이 있으니 모자·물을 준비하면 좋습니다.</span>
                 </div>
             </div>
-            <p style="font-size:12.5px;line-height:1.55;color:#1e293b;font-weight:500;margin:10px 0 0;">
-                <strong style="color:#004098;">귀가 여정</strong> — 중식 연잎밥 정식 후 도계로 이동합니다. 제천에서 샤브올데이로 석식한 뒤, 도계 도착과 함께 해산합니다.
+            <p class="prop-note soft">
+                <strong>귀가 여정</strong> — 중식 연잎밥 정식 후 도계로 이동합니다. 제천에서 샤브올데이로 석식한 뒤, 도계 도착과 함께 해산합니다.
             </p>
-            <p style="font-size:12.5px;font-weight:700;color:#0f172a;margin-top:8px;">식사 — 조식 생선구이 정식 · 중식 연잎밥 정식 · 석식 제천 샤브올데이</p>
+            <p class="prop-note">식사 — 조식 생선구이 정식 · 중식 연잎밥 정식 · 석식 제천 샤브올데이</p>
             <div class="prop-foot"><div>TOURMAKER</div><div class="mgr">이재명 대표 010-9443-7881</div></div>
         </div>
 
@@ -1161,7 +1190,7 @@
                         <li>2박 · 월미도 (바다열차·유람선 권역)</li>
                         <li>3박 · 대천 (해수욕장 권역)</li>
                     </ul>
-                    <p style="margin-top:6px;font-size:11.5px;color:#64748b;">숙소명은 추후 안내드립니다.</p>
+                    <p style="margin-top:8px;font-size:13px;color:#64748b;">숙소명은 추후 안내드립니다.</p>
                 </div>
                 <div class="prop-info-card">
                     <h3>차량 이동</h3>
