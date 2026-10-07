@@ -308,6 +308,24 @@
             .prop-hl .body { padding: 8px 10px; }
             .prop-hl .body strong { display: block; font-size: 13px; color: #0f172a; margin-bottom: 3px; }
             .prop-hl .body span { font-size: 11.5px; color: #475569; line-height: 1.45; font-weight: 500; }
+            .prop-spot {
+                display: grid; grid-template-columns: 118px 1fr; gap: 12px;
+                margin-bottom: 12px; padding-bottom: 12px;
+                border-bottom: 1px solid #e2e8f0; page-break-inside: avoid;
+            }
+            .prop-spot:last-of-type { border-bottom: 0; margin-bottom: 8px; padding-bottom: 0; }
+            .prop-spot img {
+                width: 118px; height: 92px; object-fit: cover; border-radius: 8px;
+                border: 1px solid #cbd5e1; background: #f8fafc;
+            }
+            .prop-spot h3 { font-size: 14px; font-weight: 900; color: #004098; margin: 0 0 4px 0; letter-spacing: -0.02em; }
+            .prop-spot p { font-size: 12.5px; line-height: 1.6; color: #1e293b; margin: 0; font-weight: 500; word-break: keep-all; }
+            .prop-spot .tip { display: block; margin-top: 5px; font-size: 11.5px; color: #64748b; font-weight: 700; }
+            .prop-day-label {
+                display: inline-block; background: #004098; color: #fff; font-size: 11px; font-weight: 800;
+                padding: 3px 10px; border-radius: 999px; margin-bottom: 10px;
+            }
+
             .prop-day-block {
                 border: 1.5px solid #1e293b; border-radius: 10px; padding: 12px 14px;
                 margin-bottom: 10px; page-break-inside: avoid; background: #fff !important;
@@ -947,10 +965,10 @@
                 <div class="prop-hero">
                     <p class="text-xs font-bold tracking-wide text-white/80 mb-2">도계누나들 · 3박 4일</p>
                     <h3 class="text-2xl md:text-3xl font-black leading-snug mb-2">강원에서 서해까지</h3>
-                    <p class="text-sm md:text-base text-white/90 font-medium">포인트 · 이동 · 숙소 · 일자 안내 · 비상연락</p>
+                    <p class="text-sm md:text-base text-white/90 font-medium">방문지 안내 · 사진 · 숙소 · 연락처</p>
                 </div>
                 <div class="p-5 text-center">
-                    <p class="text-sm text-slate-600">약 4장 · 일정표·준비물 체크리스트는 포함되지 않습니다.</p>
+                    <p class="text-sm text-slate-600">약 6장 · 장소마다 짧게 읽어 보는 여행 안내입니다.</p>
                 </div>
             </div>
         </div>
@@ -970,101 +988,190 @@
     </footer>
     </div>
 
-    <!-- 전체자료 표지(1장) — 일정·준비물은 아래 #print-area 원본을 이어서 출력 -->
-    <!-- 가이드북 인쇄 (일정표·준비물 제외) -->
+    <!-- 가이드북 인쇄 (일정표·준비물 제외) · 방문지 안내 -->
     <div id="proposal-print-area">
         <div class="prop-sheet">
             <div class="prop-head">
                 <img src="https://blogger.googleusercontent.com/img/a/AVvXsEitI-Z-hD82keOJ1AqHw-VTZjpw2U-O5UjtV9h3zblyG0wjsVfBWe9X9o0Q_Spctrt7krkd9qXO0xKTmGJLw4gyMZrRqpshKMFttnyx6OcC8-IGz3XLUZpGQOnRqVdol8jz5HuoDLqsEifnVRhcjUJHm13Sz8JrX9aPswMNUwZPvGtJEnQjhc2PiXlo-B8" alt="투어메이커 로고">
-                <div class="doc">TM-270401-DG · 1/4</div>
+                <div class="doc">TM-270401-DG · 1/6</div>
             </div>
             <span class="prop-cover-badge">스마트 가이드북</span>
             <h1 class="prop-cover-title">도계누나들<br>강원·서해안 3박 4일</h1>
-            <p class="prop-cover-sub">전용버스로 떠나는 소규모 국내여행 · 춘천·철원·인천·안면도·부여</p>
+            <p class="prop-cover-sub">이번 일정에서 만나는 장소를 천천히 읽어 보는 여행 안내입니다.</p>
             <div class="prop-meta">
                 <div><span class="k">행사기간</span><span class="v">2027. 04. 01 (목) ~ 04. 04 (일)</span></div>
                 <div><span class="k">행사인원</span><span class="v">7명 · 도계누나들</span></div>
                 <div><span class="k">이용교통</span><span class="v">전용버스</span></div>
             </div>
-            <p class="prop-lead">도계 출발 → 삼악산·남이섬 → 철원 고석정·안보 → 인천 월미도 → 안면도·대천 → 부여 백제 → 제천 석식 후 도계 해산.</p>
-            <h2 class="prop-h2">여행 포인트</h2>
-            <div class="prop-hl-grid">
-                <div class="prop-hl"><img src="assets/images/day1-samaksan.jpg" alt="삼악산"><div class="body"><strong>삼악산 · 남이섬</strong><span>춘천 케이블카와 남이섬 달갈비</span></div></div>
-                <div class="prop-hl"><img src="assets/images/day1-goseokjeong.jpg" alt="고석정"><div class="body"><strong>철원 고석정 · 안보</strong><span>주상절리와 안보관광</span></div></div>
-                <div class="prop-hl"><img src="assets/images/day2-wolmido.jpg" alt="월미도"><div class="body"><strong>인천 월미도</strong><span>바다열차와 유람선</span></div></div>
-                <div class="prop-hl"><img src="assets/images/day3-anmyeon.jpg" alt="안면도"><div class="body"><strong>안면도 · 부여</strong><span>꽃박람회와 백제 문화</span></div></div>
-            </div>
+            <p class="prop-lead">도계에서 출발해 춘천의 호수, 철원의 강과 안보, 인천의 바다, 서해안의 봄, 부여의 백제까지 이어집니다. 이어지는 장에서 방문지마다 무엇을 보고 느끼면 좋은지 정리해 두었습니다.</p>
+            <h2 class="prop-h2">여정 한눈에</h2>
+            <div class="prop-day-block"><div class="day-top"><strong>1일차</strong><em>4/1</em></div><ul><li>삼악산 케이블카 · 남이섬 · 고석정 · 철원 숙소</li></ul></div>
+            <div class="prop-day-block"><div class="day-top"><strong>2일차</strong><em>4/2</em></div><ul><li>철원 안보관광 · 월미바다열차 · 월미도 유람선 · 월미도 숙소</li></ul></div>
+            <div class="prop-day-block"><div class="day-top"><strong>3일차</strong><em>4/3</em></div><ul><li>안면도 꽃박람회 · 홍성 스카이워크 · 대천 모노레일 · 대천 숙소</li></ul></div>
+            <div class="prop-day-block"><div class="day-top"><strong>4일차</strong><em>4/4</em></div><ul><li>백마강 · 백제문화단지 · 제천 샤브 · 도계 해산</li></ul></div>
             <div class="prop-foot"><div>TOURMAKER</div><div class="mgr">정두영 이사 010-3841-1361</div></div>
         </div>
 
         <div class="prop-sheet">
-            <div class="prop-head"><img src="https://blogger.googleusercontent.com/img/a/AVvXsEitI-Z-hD82keOJ1AqHw-VTZjpw2U-O5UjtV9h3zblyG0wjsVfBWe9X9o0Q_Spctrt7krkd9qXO0xKTmGJLw4gyMZrRqpshKMFttnyx6OcC8-IGz3XLUZpGQOnRqVdol8jz5HuoDLqsEifnVRhcjUJHm13Sz8JrX9aPswMNUwZPvGtJEnQjhc2PiXlo-B8" alt="투어메이커 로고"><div class="doc">TM-270401-DG · 2/4</div></div>
-            <h2 class="prop-h2">이동 · 숙소 · 동선</h2>
+            <div class="prop-head">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEitI-Z-hD82keOJ1AqHw-VTZjpw2U-O5UjtV9h3zblyG0wjsVfBWe9X9o0Q_Spctrt7krkd9qXO0xKTmGJLw4gyMZrRqpshKMFttnyx6OcC8-IGz3XLUZpGQOnRqVdol8jz5HuoDLqsEifnVRhcjUJHm13Sz8JrX9aPswMNUwZPvGtJEnQjhc2PiXlo-B8" alt="투어메이커 로고">
+                <div class="doc">TM-270401-DG · 2/6</div>
+            </div>
+            <span class="prop-day-label">1일차 · 4월 1일 (목) · 도계 → 춘천 · 철원</span>
+            <h2 class="prop-h2">오늘 만나는 장소</h2>
+            <div class="prop-spot">
+                <img src="assets/images/day1-samaksan.jpg" alt="삼악산">
+                <div>
+                    <h3>춘천 삼악산 호수케이블카</h3>
+                    <p>의암호 위를 가로지르는 긴 케이블카입니다. 호수와 산 능선이 한꺼번에 펼쳐져, 춘천에 도착한 첫인상을 시원하게 열어 줍니다. 상부에서는 춘천 시내와 호수 풍경을 멀리 내려다볼 수 있습니다.</p>
+                    <span class="tip">바람막이를 준비해 주세요. 공중에서는 평지보다 바람이 느껴질 수 있습니다.</span>
+                </div>
+            </div>
+            <div class="prop-spot">
+                <img src="assets/images/day1-nami.jpg" alt="남이섬">
+                <div>
+                    <h3>남이섬 · 중식 달갈비</h3>
+                    <p>북한강 위의 작은 섬으로, 은행나무길과 메타세쿼이아길이 유명합니다. 이 일정에서는 섬 인근에서 달갈비로 중식을 하며 여유를 냅니다. 식사 전후 잠깐의 산책만으로도 봄 공기를 느끼기 좋습니다.</p>
+                    <span class="tip">편한 신발이 좋습니다. 섬·식당 이동에 짧은 도보가 있습니다.</span>
+                </div>
+            </div>
+            <div class="prop-spot">
+                <img src="assets/images/day1-goseokjeong.jpg" alt="고석정">
+                <div>
+                    <h3>철원 고석정 · 한탄강 주상절리</h3>
+                    <p>한탄강이 깎아 만든 기암과 주상절리가 인상적인 곳입니다. 물과 바위가 맞닿은 풍경이 철원 다운 깊이를 보여 줍니다. 전망 포인트에서 잠시 멈춰 강줄기와 절벽을 눈에 담아 보세요.</p>
+                    <span class="tip">난간이 있는 구간을 이용해 주세요. 사진 촬영 시 발밑을 먼저 확인합니다.</span>
+                </div>
+            </div>
+            <p style="font-size:12.5px;font-weight:700;color:#0f172a;margin-top:8px;">식사 · 숙소 — 중식 남이섬 달갈비 · 석식 밀물고기 매운탕 · 철원 숙박</p>
+            <div class="prop-foot"><div>TOURMAKER</div><div class="mgr">이재명 대표 010-9443-7881</div></div>
+        </div>
+
+        <div class="prop-sheet">
+            <div class="prop-head">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEitI-Z-hD82keOJ1AqHw-VTZjpw2U-O5UjtV9h3zblyG0wjsVfBWe9X9o0Q_Spctrt7krkd9qXO0xKTmGJLw4gyMZrRqpshKMFttnyx6OcC8-IGz3XLUZpGQOnRqVdol8jz5HuoDLqsEifnVRhcjUJHm13Sz8JrX9aPswMNUwZPvGtJEnQjhc2PiXlo-B8" alt="투어메이커 로고">
+                <div class="doc">TM-270401-DG · 3/6</div>
+            </div>
+            <span class="prop-day-label">2일차 · 4월 2일 (금) · 철원 → 인천</span>
+            <h2 class="prop-h2">오늘 만나는 장소</h2>
+            <div class="prop-spot">
+                <img src="assets/images/day2-security.jpg" alt="안보">
+                <div>
+                    <h3>철원 안보관광</h3>
+                    <p>분단의 현실을 가까이에서 느끼는 일정입니다. 전망대 등 안내 동선을 따라 이동하며, 철원 평야와 북측 지형을 살펴봅니다. 조용히 둘러보는 시간이 많은 만큼, 인솔자·현장 안내를 잘 따라 주시면 됩니다.</p>
+                    <span class="tip">신분증을 준비해 주세요. 출입·촬영 규정은 현장 안내에 따릅니다.</span>
+                </div>
+            </div>
+            <div class="prop-spot">
+                <img src="assets/images/day2-wolmido.jpg" alt="월미도">
+                <div>
+                    <h3>인천 월미바다열차</h3>
+                    <p>월미도 일대를 높게 지나가며 항구와 바다, 도시 풍경을 함께 보는 모노레일형 열차입니다. 자리에 앉아 천천히 풍경이 바뀌는 것을 즐기면 됩니다. 짧은 탑승이지만 인천 앞바다의 분위기를 잘 보여 줍니다.</p>
+                    <span class="tip">탑승 전 소지품을 정리해 주세요.</span>
+                </div>
+            </div>
+            <div class="prop-spot">
+                <img src="assets/images/day2-wolmido.jpg" alt="유람선">
+                <div>
+                    <h3>월미도 유람선</h3>
+                    <p>월미도 선착장에서 출발하는 유람선으로 인천 앞바다를 둘러봅니다. 항구·다리·해안선이 이어지는 풍경이 케이블카·열차와는 또 다른 시선입니다. 실내·실외 좌석에 따라 바람 느낌이 다를 수 있습니다.</p>
+                    <span class="tip">바닷바람이 있으니 겉옷을 챙기면 편합니다.</span>
+                </div>
+            </div>
+            <p style="font-size:12.5px;font-weight:700;color:#0f172a;margin-top:8px;">식사 · 숙소 — 조식 해장국 · 중식 이동갈비 · 석식 회정식 · 월미도 숙박</p>
+            <div class="prop-foot"><div>TOURMAKER</div><div class="mgr">가이드 미정</div></div>
+        </div>
+
+        <div class="prop-sheet">
+            <div class="prop-head">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEitI-Z-hD82keOJ1AqHw-VTZjpw2U-O5UjtV9h3zblyG0wjsVfBWe9X9o0Q_Spctrt7krkd9qXO0xKTmGJLw4gyMZrRqpshKMFttnyx6OcC8-IGz3XLUZpGQOnRqVdol8jz5HuoDLqsEifnVRhcjUJHm13Sz8JrX9aPswMNUwZPvGtJEnQjhc2PiXlo-B8" alt="투어메이커 로고">
+                <div class="doc">TM-270401-DG · 4/6</div>
+            </div>
+            <span class="prop-day-label">3일차 · 4월 3일 (토) · 서해안</span>
+            <h2 class="prop-h2">오늘 만나는 장소</h2>
+            <div class="prop-spot">
+                <img src="assets/images/day3-anmyeon.jpg" alt="안면도">
+                <div>
+                    <h3>안면도 꽃박람회</h3>
+                    <p>서해안 봄의 대표 행사로, 꽃밭과 산책로가 넓게 펼쳐집니다. 천천히 걸으며 색과 향을 즐기면 좋습니다. 야외 구간이 많아 햇볕·바람에 따라 겉옷과 모자가 있으면 편합니다.</p>
+                    <span class="tip">걷는 시간이 있습니다. 편한 신발을 신어 주세요.</span>
+                </div>
+            </div>
+            <div class="prop-spot">
+                <img src="assets/images/day3-skywalk.jpg" alt="스카이워크">
+                <div>
+                    <h3>홍성 스카이타워 · 스카이워크</h3>
+                    <p>남당항 인근의 높은 전망 시설입니다. 투명 바닥 스카이워크에서 천수만과 서해 풍경을 내려다볼 수 있습니다. 고소 구간이니 난간을 잡고 천천히 걸으시면 됩니다.</p>
+                    <span class="tip">고소공포가 있으신 분은 실내 전망 위주로 즐겨도 충분합니다.</span>
+                </div>
+            </div>
+            <div class="prop-spot">
+                <img src="assets/images/day3-monorail.jpg" alt="대천">
+                <div>
+                    <h3>대천 모노레일 · 해수욕장 권역</h3>
+                    <p>대천해수욕장 일대를 따라 이동하는 모노레일입니다. 서해의 넓은 갯벌·해변 풍경을 위에서 바라보는 재미가 있습니다. 해안 산책과 함께하면 하루의 마무리가 한결 시원해집니다.</p>
+                    <span class="tip">석양 무렵에는 바람이 차가울 수 있습니다.</span>
+                </div>
+            </div>
+            <p style="font-size:12.5px;font-weight:700;color:#0f172a;margin-top:8px;">식사 · 숙소 — 조식 꽃게탕 · 중식 한우정식 · 석식 삼합정식 · 대천 숙박</p>
+            <div class="prop-foot"><div>TOURMAKER</div><div class="mgr">정두영 이사 010-3841-1361</div></div>
+        </div>
+
+        <div class="prop-sheet">
+            <div class="prop-head">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEitI-Z-hD82keOJ1AqHw-VTZjpw2U-O5UjtV9h3zblyG0wjsVfBWe9X9o0Q_Spctrt7krkd9qXO0xKTmGJLw4gyMZrRqpshKMFttnyx6OcC8-IGz3XLUZpGQOnRqVdol8jz5HuoDLqsEifnVRhcjUJHm13Sz8JrX9aPswMNUwZPvGtJEnQjhc2PiXlo-B8" alt="투어메이커 로고">
+                <div class="doc">TM-270401-DG · 5/6</div>
+            </div>
+            <span class="prop-day-label">4일차 · 4월 4일 (일) · 부여 → 도계</span>
+            <h2 class="prop-h2">오늘 만나는 장소</h2>
+            <div class="prop-spot">
+                <img src="assets/images/day4-baekma.jpg" alt="백마강">
+                <div>
+                    <h3>부여 백마강 · 부소산성 일대</h3>
+                    <p>백마강은 부여의 상징적인 강줄기입니다. 부소산성 일대와 함께 둘러보면 백제 도읍의 풍경이 눈에 들어옵니다. 강변과 언덕길을 오가며 천천히 걸을 수 있는 구간이 있습니다.</p>
+                    <span class="tip">경사가 있는 길이 있으니 보폭을 맞춰 걸어 주세요.</span>
+                </div>
+            </div>
+            <div class="prop-spot">
+                <img src="assets/images/day4-baekje.jpg" alt="백제">
+                <div>
+                    <h3>백제문화단지</h3>
+                    <p>백제 왕궁·생활 공간을 재현·전시한 넓은 문화 단지입니다. 건물과 연못, 산책로가 이어져 사진 찍기 좋고, 역사 이야기를 곁들이면 하루의 의미가 깊어집니다. 단지 안은 도보 이동이 기본입니다.</p>
+                    <span class="tip">그늘이 적은 구간이 있으니 모자·물을 준비하면 좋습니다.</span>
+                </div>
+            </div>
+            <p style="font-size:12.5px;line-height:1.55;color:#1e293b;font-weight:500;margin:10px 0 0;">
+                <strong style="color:#004098;">귀가 여정</strong> — 중식 연잎밥 정식 후 도계로 이동합니다. 제천에서 샤브올데이로 석식한 뒤, 도계 도착과 함께 해산합니다.
+            </p>
+            <p style="font-size:12.5px;font-weight:700;color:#0f172a;margin-top:8px;">식사 — 조식 생선구이 정식 · 중식 연잎밥 정식 · 석식 제천 샤브올데이</p>
+            <div class="prop-foot"><div>TOURMAKER</div><div class="mgr">이재명 대표 010-9443-7881</div></div>
+        </div>
+
+        <div class="prop-sheet">
+            <div class="prop-head">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEitI-Z-hD82keOJ1AqHw-VTZjpw2U-O5UjtV9h3zblyG0wjsVfBWe9X9o0Q_Spctrt7krkd9qXO0xKTmGJLw4gyMZrRqpshKMFttnyx6OcC8-IGz3XLUZpGQOnRqVdol8jz5HuoDLqsEifnVRhcjUJHm13Sz8JrX9aPswMNUwZPvGtJEnQjhc2PiXlo-B8" alt="투어메이커 로고">
+                <div class="doc">TM-270401-DG · 6/6</div>
+            </div>
+            <h2 class="prop-h2">숙소 · 이동 · 연락처</h2>
             <div class="prop-info-grid">
+                <div class="prop-info-card">
+                    <h3>숙박 (3박)</h3>
+                    <ul>
+                        <li>1박 · 철원 (고석정·안보 권역)</li>
+                        <li>2박 · 월미도 (바다열차·유람선 권역)</li>
+                        <li>3박 · 대천 (해수욕장 권역)</li>
+                    </ul>
+                    <p style="margin-top:6px;font-size:11.5px;color:#64748b;">숙소명은 추후 안내드립니다.</p>
+                </div>
                 <div class="prop-info-card">
                     <h3>차량 이동</h3>
                     <ul>
                         <li>전 일정 전용버스</li>
                         <li>1일차 07:00 도계 출발</li>
                         <li>4일차 제천 석식 후 도계 해산</li>
+                        <li>이동 중 안전벨트 착용</li>
                     </ul>
                 </div>
-                <div class="prop-info-card">
-                    <h3>숙박 (3박)</h3>
-                    <ul>
-                        <li>1박 철원 · 2박 월미도 · 3박 대천</li>
-                        <li>숙소명은 추후 안내</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="prop-day-block"><div class="day-top"><strong>1일차 4/1</strong><em>도계→철원</em></div><ul><li>삼악산 케이블카 · 남이섬 · 고석정 · 철원 숙소</li></ul></div>
-            <div class="prop-day-block"><div class="day-top"><strong>2일차 4/2</strong><em>철원→인천</em></div><ul><li>안보관광 · 바다열차 · 월미도 유람선 · 월미도 숙소</li></ul></div>
-            <div class="prop-day-block"><div class="day-top"><strong>3일차 4/3</strong><em>서해안</em></div><ul><li>안면도 꽃박람회 · 홍성 스카이워크 · 대천 모노레일 · 대천 숙소</li></ul></div>
-            <div class="prop-day-block"><div class="day-top"><strong>4일차 4/4</strong><em>부여→도계</em></div><ul><li>백마강 · 백제문화단지 · 제천 샤브 · 도계 해산</li></ul></div>
-            <p style="font-size:11.5px;color:#64748b;text-align:right;font-weight:600;">상세 일정표는 「일정표 인쇄하기」에서 확인하세요.</p>
-            <div class="prop-foot"><div>TOURMAKER</div><div class="mgr">이재명 대표 010-9443-7881</div></div>
-        </div>
-
-        <div class="prop-sheet">
-            <div class="prop-head"><img src="https://blogger.googleusercontent.com/img/a/AVvXsEitI-Z-hD82keOJ1AqHw-VTZjpw2U-O5UjtV9h3zblyG0wjsVfBWe9X9o0Q_Spctrt7krkd9qXO0xKTmGJLw4gyMZrRqpshKMFttnyx6OcC8-IGz3XLUZpGQOnRqVdol8jz5HuoDLqsEifnVRhcjUJHm13Sz8JrX9aPswMNUwZPvGtJEnQjhc2PiXlo-B8" alt="투어메이커 로고"><div class="doc">TM-270401-DG · 3/4</div></div>
-            <h2 class="prop-h2">1–2일차 주요 장소</h2>
-            <div class="prop-day-block">
-                <div class="day-top"><strong>1일차</strong><em>4/1</em></div>
-                <div class="prop-hl-grid" style="margin-top:8px;margin-bottom:0;">
-                    <div class="prop-hl"><img src="assets/images/day1-samaksan.jpg" alt="삼악산"><div class="body"><strong>삼악산 케이블카</strong><span>춘천 호수와 산 능선</span></div></div>
-                    <div class="prop-hl"><img src="assets/images/day1-goseokjeong.jpg" alt="고석정"><div class="body"><strong>고석정</strong><span>한탄강 주상절리</span></div></div>
-                </div>
-                <ul style="margin-top:8px;"><li>중식 남이섬 달갈비 · 석식 밀물고기 매운탕 · 철원 숙박</li></ul>
-            </div>
-            <div class="prop-day-block">
-                <div class="day-top"><strong>2일차</strong><em>4/2</em></div>
-                <div class="prop-hl-grid" style="margin-top:8px;margin-bottom:0;">
-                    <div class="prop-hl"><img src="assets/images/day2-security.jpg" alt="안보"><div class="body"><strong>철원 안보관광</strong><span>평화전망대 등</span></div></div>
-                    <div class="prop-hl"><img src="assets/images/day2-wolmido.jpg" alt="월미도"><div class="body"><strong>월미도</strong><span>바다열차 · 유람선</span></div></div>
-                </div>
-                <ul style="margin-top:8px;"><li>조식 해장국 · 중식 이동갈비 · 석식 회정식 · 월미도 숙박</li></ul>
-            </div>
-            <div class="prop-foot"><div>TOURMAKER</div><div class="mgr">가이드 미정</div></div>
-        </div>
-
-        <div class="prop-sheet">
-            <div class="prop-head"><img src="https://blogger.googleusercontent.com/img/a/AVvXsEitI-Z-hD82keOJ1AqHw-VTZjpw2U-O5UjtV9h3zblyG0wjsVfBWe9X9o0Q_Spctrt7krkd9qXO0xKTmGJLw4gyMZrRqpshKMFttnyx6OcC8-IGz3XLUZpGQOnRqVdol8jz5HuoDLqsEifnVRhcjUJHm13Sz8JrX9aPswMNUwZPvGtJEnQjhc2PiXlo-B8" alt="투어메이커 로고"><div class="doc">TM-270401-DG · 4/4</div></div>
-            <h2 class="prop-h2">3–4일차 · 연락처</h2>
-            <div class="prop-day-block">
-                <div class="day-top"><strong>3일차</strong><em>4/3</em></div>
-                <div class="prop-hl-grid" style="margin-top:8px;margin-bottom:0;">
-                    <div class="prop-hl"><img src="assets/images/day3-anmyeon.jpg" alt="안면도"><div class="body"><strong>안면도 꽃박람회</strong><span>서해안 봄 풍경</span></div></div>
-                    <div class="prop-hl"><img src="assets/images/day3-skywalk.jpg" alt="스카이워크"><div class="body"><strong>홍성 스카이워크</strong><span>대천 모노레일</span></div></div>
-                </div>
-                <ul style="margin-top:8px;"><li>조식 꽃게탕 · 중식 한우 · 석식 삼합 · 대천 숙박</li></ul>
-            </div>
-            <div class="prop-day-block">
-                <div class="day-top"><strong>4일차</strong><em>4/4</em></div>
-                <div class="prop-hl-grid" style="margin-top:8px;margin-bottom:0;">
-                    <div class="prop-hl"><img src="assets/images/day4-baekma.jpg" alt="백마강"><div class="body"><strong>부여 백마강</strong><span>부소산성 일대</span></div></div>
-                    <div class="prop-hl"><img src="assets/images/day4-baekje.jpg" alt="백제"><div class="body"><strong>백제문화단지</strong><span>제천 샤브 후 도계 해산</span></div></div>
-                </div>
-                <ul style="margin-top:8px;"><li>조식 생선구이 · 중식 연잎밥 · 석식 샤브올데이</li></ul>
             </div>
             <div class="prop-contact-row">
                 <div class="prop-contact-card"><div class="role">담당</div><div class="name">정두영 이사</div><div class="tel">010-3841-1361</div></div>
@@ -1074,7 +1181,7 @@
                 <img src="assets/images/guidebook-qr.png" alt="QR" width="118" height="118">
                 <div class="qr-copy">
                     <strong>스마트폰 가이드북</strong>
-                    지도·당일 일정·날씨는 여기서 확인하세요.
+                    지도 동선·당일 일정·날씨는 화면에서 확인하세요. 상세 일정표·준비물은 「일정표 인쇄하기」를 이용해 주세요.
                     <div class="qr-url">https://indadady.github.io/270401_Domestic/</div>
                 </div>
             </div>
